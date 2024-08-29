@@ -14,7 +14,7 @@ public class RecipeIngredient extends BaseEntity {
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
-    @Column(nullable = false)
+    @Column()
     private String quantity;
 
     public RecipeIngredient() {

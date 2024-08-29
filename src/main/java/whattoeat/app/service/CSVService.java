@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CSVService {
@@ -36,11 +37,15 @@ public class CSVService {
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
             List<String[]> records = reader.readAll();
 
-            System.out.println("test");
 
-            for (int i = 1; i <= records.size(); i++) {
+            for (int i = 1; i <= records.size() - 1; i++) {
                 List<RecipeIngredient> ingredientsList = new ArrayList<>();
                 String[] currentRecord = records.get(i);
+
+                if (recipeRepository.findByName(currentRecord[1]).isPresent()) {
+                    continue;
+                }
+
                 Recipe recipe = new Recipe();
                 recipe.setName(currentRecord[1]);
                 recipe.setPreparationDescription(currentRecord[2]);
@@ -49,20 +54,37 @@ public class CSVService {
                 List<String> ingredientsArr = Arrays.stream(currentRecord[0].split("\\n")).toList();
 
                 ingredientsArr.forEach(ingredient ->{
-                    //check if the ingredient already exists in the database
                     Ingredient ingredientEntity = new Ingredient();
-                    String ingredientName = ingredient.split(" - ")[0];
-                    ingredientEntity.setName(ingredientName);
+                    RecipeIngredient recipeIngredientEntity = new RecipeIngredient();
+
+                    //check if the ingredient is already in the database
+                    Optional<Ingredient> ingredientOpt = ingredientRepository.findByName(ingredient.split(" - ")[0]);
+                    if (ingredientOpt.isPresent()) {
+                        ingredientEntity = ingredientOpt.get();
+                    }else {
+                        String ingredientName = ingredient.split(" - ")[0];
+                        ingredientEntity.setName(ingredientName);
+                    }
                     ingredientRepository.saveAndFlush(ingredientEntity);
 
 
+                    //check if the ingredient has quantity
+                    if (ingredient.split(" - ").length != 2) {
+                        //no quantity
+                        recipeIngredientEntity.setIngredient(ingredientEntity);
+                        recipeIngredientEntity.setRecipe(recipe);
+                        recipeIngredientsRepository.saveAndFlush(recipeIngredientEntity);
 
-                    RecipeIngredient recipeIngredientEntity = new RecipeIngredient();
-                    String quantity = ingredient.split(" - ")[1];
-                    recipeIngredientEntity.setIngredient(ingredientEntity);
-                    recipeIngredientEntity.setQuantity(quantity);
-                    recipeIngredientEntity.setRecipe(recipe);
-                    recipeIngredientsRepository.saveAndFlush(recipeIngredientEntity);
+                    }else {
+                        //has quantity
+                        String quantity = ingredient.split(" - ")[1];
+                        recipeIngredientEntity.setIngredient(ingredientEntity);
+                        recipeIngredientEntity.setQuantity(quantity);
+                        recipeIngredientEntity.setRecipe(recipe);
+                        recipeIngredientsRepository.saveAndFlush(recipeIngredientEntity);
+
+                    }
+
                     ingredientsList.add(recipeIngredientEntity);
                 });
 
