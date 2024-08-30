@@ -3,6 +3,7 @@ package whattoeat.app.service;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
@@ -26,6 +27,9 @@ public class CSVService {
     private final RecipeRepository recipeRepository;
     private final RecipeIngredientsRepository recipeIngredientsRepository;
 
+    @Value("${file1Path}")
+    private String file1Path;
+
     public CSVService(IngredientRepository ingredientRepository, RecipeRepository recipeRepository, RecipeIngredientsRepository recipeIngredientsRepository) {
         this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;
@@ -33,7 +37,7 @@ public class CSVService {
     }
 
     public void readCsvAndInsertData() {
-        String filePath = "C:\\Users\\skull\\coding\\app\\src\\main\\java\\whattoeat\\app\\recipesInfo.csv";
+        String filePath = file1Path;
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
             List<String[]> records = reader.readAll();
 
