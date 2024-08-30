@@ -1,4 +1,4 @@
-package whattoeat.app.service;
+package whattoeat.app.service.impl;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;

@@ -16,6 +16,10 @@ public class Ingredient extends BaseEntity {
     public Ingredient() {
     }
 
+    public Ingredient(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,7 +1,6 @@
-package whattoeat.app.service;
+package whattoeat.app.service.impl;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class CML implements CommandLineRunner {
