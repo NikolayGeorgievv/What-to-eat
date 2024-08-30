@@ -2,7 +2,6 @@ package whattoeat.app.service;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import whattoeat.app.model.Ingredient;
@@ -14,7 +13,6 @@ import whattoeat.app.repository.RecipeRepository;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
