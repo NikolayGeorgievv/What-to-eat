@@ -1,6 +1,7 @@
 package whattoeat.app.service.impl;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import whattoeat.app.dto.RecipeDTO;
@@ -40,10 +41,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeDTO> searchByProductName(String productName) {
+    public Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest) {
         List<Ingredient> ingredientList = new ArrayList<>();
         List<String> productsNames = parseIngredients(productName);
-        productsNames.forEach(product ->{
+        productsNames.forEach(product -> {
             Optional<Ingredient> ingredient = ingredientRepository.findByName(product);
             ingredient.ifPresent(ingredientList::add);
         });
@@ -55,14 +56,32 @@ public class RecipeServiceImpl implements RecipeService {
 
         List<Recipe> allByIngredients = recipeRepository.findAllByIngredients(ingredientNames);
 
+        return getRecipeDTOS(pageRequest, allByIngredients);
 
+    }
 
-        return List.of();
+    private List<RecipeDTO> mapRecipes(List<Recipe> allByIngredients) {
+        List<RecipeDTO> recipeDTOs = new ArrayList<>();
+        allByIngredients.forEach(recipe -> {
+            RecipeDTO recipeDTO = new RecipeDTO(recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
+            recipeDTOs.add(recipeDTO);
+        });
+        return recipeDTOs;
     }
 
     @Override
-    public List<RecipeDTO> searchByRecipeName(String recipeName) {
-        return List.of();
+    public Page<RecipeDTO> searchByRecipeName(String recipeName, PageRequest pageRequest) {
+
+        List<Recipe> allRecipesByName = recipeRepository.findAllByNameContainingIgnoreCase(recipeName);
+        return getRecipeDTOS(pageRequest, allRecipesByName);
+    }
+
+    private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {
+        List<RecipeDTO> recipeDTOs = mapRecipes(allRecipesByName);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), recipeDTOs.size());
+        return new PageImpl<>(recipeDTOs.subList(start, end), pageRequest, recipeDTOs.size());
     }
 
     public List<String> parseIngredients(String input) {

@@ -60,69 +60,30 @@
 </div>
 
 <div class="container my-5">
-    <div id="results" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <!-- Results will be injected here -->
-    </div>
     <nav>
         <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+            <li class="page-item"> <a th:if="${page.hasPrevious()}" th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Previous</a></li>
+            <li class="page-item"><span th:text="${page.number + 1}">1</span></li>
+            <li class="page-item"><a th:if="${page.hasNext()}" th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Next</a></li>
         </ul>
     </nav>
+    <div id="results" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div th:each="recipe : ${page.content}">
+            <p th:text="${recipe.name}">Recipe Name</p>
+            <p>Необходими продукти:</p>
+            <div th:each="ingredient : ${recipe.getIngredients()}">
+                <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>
+            </div>
+            <p th:text="${recipe.preparationDescription}">Preparation Description</p>
+        </div>
+
+    </div>
+
 </div>
 
 
 
 <script>
-
-    let currentPage = 0;
-
-    function fetchResults(page) {
-        fetch(`/results?page=${page}&size=9`)
-            .then(response => response.json())
-            .then(data => {
-                const resultsContainer = document.getElementById('results');
-                resultsContainer.innerHTML = '';
-                data.content.forEach(result => {
-                    const col = document.createElement('div');
-                    col.className = 'col';
-                    col.innerHTML = `
-                        <div class="card shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                            <div class="card-body">
-                                <p class="card-text">${result.description}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                    </div>
-                                    <small class="text-body-secondary">${result.time}</small>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    resultsContainer.appendChild(col);
-                });
-            });
-    }
-
-    document.getElementById('prevPage').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (currentPage > 0) {
-            currentPage--;
-            fetchResults(currentPage);
-        }
-    });
-
-    document.getElementById('nextPage').addEventListener('click', function (e) {
-        e.preventDefault();
-        currentPage++;
-        fetchResults(currentPage);
-    });
-
-    // Initial fetch
-    fetchResults(currentPage);
-
 
     document.getElementById('productSearchBtn').addEventListener('click', function() {
         document.getElementById('productSearch').classList.remove('d-none');

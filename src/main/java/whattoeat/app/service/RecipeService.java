@@ -9,7 +9,7 @@ import java.util.List;
 public interface RecipeService {
     Page<RecipeDTO> getMatches(PageRequest of);
 
-    List<RecipeDTO> searchByProductName(String productName);
+    Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest);
 
-    List<RecipeDTO> searchByRecipeName(String recipeName);
+    Page<RecipeDTO> searchByRecipeName(String recipeName, PageRequest pageRequest);
 }

@@ -15,11 +15,17 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Optional<Recipe> findByName(String name);
 
 
-    @Query(value = "SELECT r.* FROM recipe r " +
+    @Query(value = "SELECT r.*, COUNT(i.id) AS match_count " +
+            "FROM recipe r " +
             "JOIN recipe_ingredients ri ON r.id = ri.recipe_id " +
             "JOIN ingredients i ON ri.ingredient_id = i.id " +
-            "WHERE LOWER(i.name) IN :ingredientNames", nativeQuery = true)
+            "WHERE LOWER(i.name) IN :ingredientNames " +
+            "GROUP BY r.id " +
+            "ORDER BY match_count DESC " +
+            "LIMIT 10", nativeQuery = true)
     List<Recipe> findAllByIngredients(@Param("ingredientNames") List<String> ingredientNames);
+
+    List<Recipe> findAllByNameContainingIgnoreCase(String recipeName);
 
 
 //    Optional<List<Recipe>> findAllByIngredientsContainingIgnoreCase(List<String> ingredients);

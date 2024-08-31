@@ -43,4 +43,11 @@ public class RecipeIngredient extends BaseEntity {
     public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
+
+    public String toString() {
+        if (quantity == null) {
+            return ingredient.getName();
+        }
+        return ingredient.getName() + " - " + quantity;
+    }
 }
