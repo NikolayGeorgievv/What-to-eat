@@ -47,4 +47,11 @@ public class ResultPageController {
         model.addAttribute("recipeName", recipeName);
         return "resultPage";
     }
+
+    @GetMapping("/recipe")
+    public String getRecipe(@RequestParam("title") String title, Model model) {
+        RecipeDTO recipe = recipeService.findByTitle(title);
+        model.addAttribute("recipe", recipe);
+        return "popularRecipeResult";
+    }
 }

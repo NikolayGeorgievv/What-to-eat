@@ -76,6 +76,16 @@ public class RecipeServiceImpl implements RecipeService {
         return getRecipeDTOS(pageRequest, allRecipesByName);
     }
 
+    @Override
+    public RecipeDTO findByTitle(String title) {
+        Recipe recipeByName = this.recipeRepository.findByNameIgnoreCase(title);
+        return new RecipeDTO(
+                recipeByName.getName(),
+                recipeByName.getPreparationDescription(),
+                recipeByName.getIngredients()
+        );
+    }
+
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {
         List<RecipeDTO> recipeDTOs = mapRecipes(allRecipesByName);
 

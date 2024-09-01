@@ -12,4 +12,6 @@ public interface RecipeService {
     Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest);
 
     Page<RecipeDTO> searchByRecipeName(String recipeName, PageRequest pageRequest);
+
+    RecipeDTO findByTitle(String title);
 }
