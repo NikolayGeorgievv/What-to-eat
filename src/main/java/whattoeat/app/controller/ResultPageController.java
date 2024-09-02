@@ -32,7 +32,7 @@ public class ResultPageController {
 
 
     @GetMapping("/search")
-    public String search(@RequestParam String searchType, @RequestParam(required = false) String productName, @RequestParam(required = false) String recipeName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size, Model model) {
+    public String search(@RequestParam String searchType, @RequestParam(required = false) String productName, @RequestParam(required = false) String recipeName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size, Model model) {
         Page<RecipeDTO> resultPage;
         if ("product".equals(searchType)) {
             resultPage = recipeService.searchByProductName(productName, PageRequest.of(page, size));

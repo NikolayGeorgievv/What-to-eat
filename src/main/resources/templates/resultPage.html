@@ -35,7 +35,7 @@
     </form>
 </div>
 
-<div class="container my-1">
+<div class="container my-1 d-flex flex-column align-items-center" id="recipeContainer">
     <nav>
         <ul class="pagination justify-content-center">
             <li class="page-item"> <a th:if="${page.hasPrevious()}" th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Предишна</a></li>
@@ -43,8 +43,8 @@
             <li class="page-item"><a th:if="${page.hasNext()}" th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Следваща</a></li>
         </ul>
     </nav>
-    <div id="results" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div th:each="recipe : ${page.content}">
+    <div id="results" class="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-3">
+        <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3">
             <h3 th:text="${recipe.name}">Recipe Name</h3>
             <h5>Необходими продукти:</h5>
             <div th:each="ingredient : ${recipe.getIngredients()}">
@@ -119,6 +119,17 @@
         color: black;
     }
 
+    #results{
+        width: 85%;
+    }
+
+    #singleRecipe{
+        border: 1px solid #ffc107;
+        margin: 10px;
+        border-radius: 10px;
+        width: 28.3%;
+    }
+
     .searchButton{
         margin-top: 20px;
         margin-right: 100%;
@@ -129,13 +140,16 @@
         color: black;
     }
     .form-control{
-        border: 1px, solid, lightgrey;
+        border: 1px solid lightgrey;
         width: 74.5%;
         background: #f8f3ef;
     }
     .page-item{
         margin: 10px;
         font-size: large;
+    }
+    #recipeContainer {
+        max-width: 100%;
     }
 </style>
 </html>
