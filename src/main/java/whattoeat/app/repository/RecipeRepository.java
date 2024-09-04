@@ -17,7 +17,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
 
     @Query(value = "SELECT r.*, COUNT(i.id) AS match_count " +
-            "FROM recipe r " +
+            "FROM recipes r " +
             "JOIN recipe_ingredients ri ON r.id = ri.recipe_id " +
             "JOIN ingredients i ON ri.ingredient_id = i.id " +
             "WHERE LOWER(i.name) IN :ingredientNames " +

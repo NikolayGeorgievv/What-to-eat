@@ -7,11 +7,10 @@ import org.springframework.stereotype.Service;
 import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
-import whattoeat.app.model.RecipeIngredient;
 import whattoeat.app.repository.IngredientRepository;
 import whattoeat.app.repository.RecipeIngredientsRepository;
 import whattoeat.app.repository.RecipeRepository;
-import whattoeat.app.service.RecipeService;
+import whattoeat.app.service.service.RecipeService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

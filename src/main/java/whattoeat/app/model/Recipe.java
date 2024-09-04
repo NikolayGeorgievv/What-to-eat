@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Table
 @Entity
+@Table(name = "recipes")
 public class Recipe extends BaseEntity {
 
     @Column

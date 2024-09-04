@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import whattoeat.app.dto.RecipeDTO;
-import whattoeat.app.service.RecipeService;
+import whattoeat.app.service.service.RecipeService;
 
 @Controller
 public class ResultPageController {

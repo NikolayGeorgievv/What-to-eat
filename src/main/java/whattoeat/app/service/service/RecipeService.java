@@ -1,10 +1,8 @@
-package whattoeat.app.service;
+package whattoeat.app.service.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import whattoeat.app.dto.RecipeDTO;
-
-import java.util.List;
 
 public interface RecipeService {
     Page<RecipeDTO> getMatches(PageRequest of);
