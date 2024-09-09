@@ -17,13 +17,13 @@
     <nav th:replace="~{fragments/nav-bar}"></nav>
 </div>
 <div class="container col-xxl-8 px-4 py-5">
-    <div class="row flex-lg-row-reverse align-items-center g-2 py-5">
+    <div class="row flex-lg-row align-items-center g-2 py-5" id="loginContainer">
 
         <form
                 id="login-form"
                 th:action="@{/users/login}"
                 th:method="post"
-                class="col-10 col-sm-8 col-lg-6">
+                class="col-10 col-sm-6 col-lg-4">
             <div class="form-group login">
                 <label for="exampleInputEmail1">Имейл</label>
                 <input type="email" class="form-control" id="exampleInputEmail1" name="email"
@@ -68,6 +68,11 @@
     }
     *{
         font-family: 'Lobster', sans-serif;
+    }
+
+    #loginContainer{
+        margin-left: 150px;
+        margin-top: 20px;
     }
 
     .errors {

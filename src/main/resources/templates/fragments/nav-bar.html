@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Nav bar</title>
@@ -30,7 +30,8 @@
             </div>
 
 
-            <div th:if="${#authentication == null}" class="col-md-2 text-end d-flex">
+
+            <div sec:authorize="isAnonymous()" class="col-md-2 text-end d-flex">
                 <a th:href="@{/users/login}">
                     <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold"
                             style="width: 110px">Вход
