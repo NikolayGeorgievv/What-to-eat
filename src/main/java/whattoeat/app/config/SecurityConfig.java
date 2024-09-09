@@ -54,7 +54,7 @@ public class SecurityConfig {
                         logout -> {
                             logout
                                     .logoutUrl("/logout")
-                                    .logoutSuccessUrl("/index")
+                                    .logoutSuccessUrl("/mainPage")
                                     .invalidateHttpSession(true);
                         }
                 ).rememberMe(

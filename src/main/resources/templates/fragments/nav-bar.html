@@ -43,6 +43,16 @@
                     </button>
                 </a>
             </div>
+
+            <div sec:authorize="isAuthenticated()" class="text-end" id="logoutBtn">
+
+                <form th:method="post"
+                      th:action="@{/logout}">
+                    <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold" value="Logout"
+                            >Изход</button>
+
+                </form>
+            </div>
         </div>
     </div>
 </nav>
@@ -50,6 +60,9 @@
 <style>
     .btn {
         color: black;
+    }
+    #logoutBtn{
+        width: auto;
     }
 </style>
 </html>
