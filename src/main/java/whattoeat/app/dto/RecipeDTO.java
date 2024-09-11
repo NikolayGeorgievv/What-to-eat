@@ -6,14 +6,24 @@ import java.util.List;
 
 public class RecipeDTO {
 
+    private Long id;
     private String name;
     private String preparationDescription;
     private List<RecipeIngredient> ingredients;
 
-    public RecipeDTO(String name, String preparationDescription, List<RecipeIngredient> ingredients) {
+    public RecipeDTO(Long id, String name, String preparationDescription, List<RecipeIngredient> ingredients) {
+        this.id = id;
         this.name = name;
         this.preparationDescription = preparationDescription;
         this.ingredients = ingredients;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

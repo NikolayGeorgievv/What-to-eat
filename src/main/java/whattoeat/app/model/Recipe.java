@@ -18,6 +18,9 @@ public class Recipe extends BaseEntity {
     @Column(columnDefinition = "text")
     private String preparationDescription;
 
+    @Column(name = "liked_counter")
+    private int likedCounter;
+
 
     public Recipe() {
     }
@@ -44,5 +47,13 @@ public class Recipe extends BaseEntity {
 
     public void setPreparationDescription(String preparationDescription) {
         this.preparationDescription = preparationDescription;
+    }
+
+    public int getLikedCounter() {
+        return likedCounter;
+    }
+
+    public void setLikedCounter(int likedCounter) {
+        this.likedCounter = likedCounter;
     }
 }

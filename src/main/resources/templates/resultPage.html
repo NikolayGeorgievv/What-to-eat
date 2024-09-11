@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1a33788db9.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
@@ -18,8 +19,11 @@
 
 <div class="container my-1">
     <div class="d-flex justify-content-center mb-4">
-        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2">Търси по продукти</button>
-        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Търси по рецепта</button>
+        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2">Търси по
+            продукти
+        </button>
+        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Търси по рецепта
+        </button>
     </div>
     <form id="searchForm" action="/search" method="get">
         <input type="hidden" id="searchType" name="searchType" value="product">
@@ -38,27 +42,46 @@
 <div class="container my-1 d-flex flex-column align-items-center" id="recipeContainer">
     <nav>
         <ul class="pagination justify-content-center">
-            <li class="page-item"> <a th:if="${page.hasPrevious()}" th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Предишна</a></li>
+            <li class="page-item"><a th:if="${page.hasPrevious()}"
+                                     th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Предишна</a>
+            </li>
             <li class="page-item"><span th:text="'(' +  ${page.number + 1} + ')'">1</span></li>
-            <li class="page-item"><a th:if="${page.hasNext()}" th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Следваща</a></li>
+            <li class="page-item"><a th:if="${page.hasNext()}"
+                                     th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Следваща</a>
+            </li>
         </ul>
     </nav>
     <div id="results" class="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-3">
         <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3">
-            <h3 th:text="${recipe.name}">Recipe Name</h3>
+            <div class="d-flex justify-content-around">
+                <h3 th:text="${recipe.name}">Recipe Name</h3>
+                <div>
+                    <form th:action="@{/addToFavorite}" method="post">
+                        <input type="hidden" name="recipeId" th:value="${recipe.id}" />
+                        <button type="submit" value="Добави в любими" id="addToFavoriteBtn"><i class="fa-regular fa-heart"></i></button>
+                    </form>
+                    <form th:action="@{/removeFromFavorite}" method="post">
+                        <input type="hidden" name="recipeId" th:value="${recipe.id}" />
+                        <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn"><i class="fa-solid fa-heart"></i></button>
+                    </form>
+                </div>
+<!--                <div>-->
+<!--                    <button value="Харесвам!"><i class="fa-regular fa-thumbs-up"></i></button>-->
+<!--                    <button value="Харесано!"><i class="fa-solid fa-thumbs-up"></i></button>-->
+<!--                </div>-->
+            </div>
             <h5>Необходими продукти:</h5>
             <div th:each="ingredient : ${recipe.getIngredients()}">
                 <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>
             </div>
-<!--            <p th:text="${recipe.preparationDescription}">Preparation Description</p>-->
-<!--            <p th:text="${#strings.abbreviate(recipe.preparationDescription, 100)}">Preparation Description</p>-->
+            <!--            <p th:text="${recipe.preparationDescription}">Preparation Description</p>-->
+            <!--            <p th:text="${#strings.abbreviate(recipe.preparationDescription, 100)}">Preparation Description</p>-->
             <button class="btn btn-link" onclick="toggleContent(this)">Цъкни за рецепта</button>
             <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>
         </div>
     </div>
 
 </div>
-
 
 
 <script>
@@ -74,23 +97,23 @@
         }
     }
 
-    document.getElementById('productSearchBtn').addEventListener('click', function() {
+    document.getElementById('productSearchBtn').addEventListener('click', function () {
         document.getElementById('productSearch').classList.remove('d-none');
         document.getElementById('recipeSearch').classList.add('d-none');
         document.getElementById('searchType').value = 'product';
     });
 
-    document.getElementById('recipeSearchBtn').addEventListener('click', function() {
+    document.getElementById('recipeSearchBtn').addEventListener('click', function () {
         document.getElementById('recipeSearch').classList.remove('d-none');
         document.getElementById('productSearch').classList.add('d-none');
         document.getElementById('searchType').value = 'recipe';
     });
-    document.getElementById('productSearchBtn').addEventListener('click', function() {
+    document.getElementById('productSearchBtn').addEventListener('click', function () {
         this.classList.add('btn-selected');
         document.getElementById('recipeSearchBtn').classList.remove('btn-selected');
     });
 
-    document.getElementById('recipeSearchBtn').addEventListener('click', function() {
+    document.getElementById('recipeSearchBtn').addEventListener('click', function () {
         this.classList.add('btn-selected');
         document.getElementById('productSearchBtn').classList.remove('btn-selected');
     });
@@ -103,9 +126,11 @@
         height: 100vh;
         background: linear-gradient(to right, #f8f3ef 66.67%, white 33.33%);
     }
-    *{
+
+    * {
         font-family: 'Lobster', sans-serif;
     }
+
     .search-section {
         transition: opacity 0.5s ease-in-out;
     }
@@ -115,39 +140,43 @@
         pointer-events: none;
     }
 
-    .btn{
+    .btn {
         color: black;
     }
 
-    #results{
+    #results {
         width: 85%;
     }
 
-    #singleRecipe{
+    #singleRecipe {
         border: 1px solid #ffc107;
         margin: 10px;
         border-radius: 10px;
         width: 28.3%;
     }
 
-    .searchButton{
+    .searchButton {
         margin-top: 20px;
         margin-right: 100%;
-        margin-left: 67%!important;
+        margin-left: 67% !important;
     }
+
     .btn-selected {
         background-color: #ffc107;
         color: black;
     }
-    .form-control{
+
+    .form-control {
         border: 1px solid lightgrey;
         width: 74.5%;
         background: #f8f3ef;
     }
-    .page-item{
+
+    .page-item {
         margin: 10px;
         font-size: large;
     }
+
     #recipeContainer {
         max-width: 100%;
     }

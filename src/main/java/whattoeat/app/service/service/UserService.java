@@ -10,4 +10,7 @@ public interface UserService {
     void registerUser(RegisterUserDTO registerUserDTO);
 
 
+    void addRecipeToFavorites(Long recipeId, String userEmail);
+
+    void removeRecipeFromFavorites(Long recipeId, String userEmail);
 }

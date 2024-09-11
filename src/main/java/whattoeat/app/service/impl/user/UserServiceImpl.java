@@ -7,10 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import whattoeat.app.dto.RegisterUserDTO;
+import whattoeat.app.model.Recipe;
 import whattoeat.app.model.User;
 import whattoeat.app.model.UserRoleEntity;
 import whattoeat.app.repository.RolesRepository;
 import whattoeat.app.repository.UserRepository;
+import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
 import java.util.ArrayList;
@@ -23,12 +25,14 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
+    private final RecipeService recipeService;
 
-    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository) {
+    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService) {
         this.userDetail = userDetail;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
+        this.recipeService = recipeService;
     }
 
 
@@ -67,6 +71,22 @@ public class UserServiceImpl implements UserService {
             user.setRoles(List.of(userRole));
         }
 
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void addRecipeToFavorites(Long recipeId, String userEmail) {
+        Recipe recipeById = recipeService.findById(recipeId);
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.getFavoriteRecipes().add(recipeById.getName());
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void removeRecipeFromFavorites(Long recipeId, String userEmail) {
+        Recipe recipeById = recipeService.findById(recipeId);
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.getFavoriteRecipes().remove(recipeById.getName());
         userRepository.saveAndFlush(user);
     }
 

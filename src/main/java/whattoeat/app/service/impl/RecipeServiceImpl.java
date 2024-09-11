@@ -62,7 +62,7 @@ public class RecipeServiceImpl implements RecipeService {
     private List<RecipeDTO> mapRecipes(List<Recipe> allByIngredients) {
         List<RecipeDTO> recipeDTOs = new ArrayList<>();
         allByIngredients.forEach(recipe -> {
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
+            RecipeDTO recipeDTO = new RecipeDTO(recipe.getId() ,recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
             recipeDTOs.add(recipeDTO);
         });
         return recipeDTOs;
@@ -79,10 +79,19 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeDTO findByTitle(String title) {
         Recipe recipeByName = this.recipeRepository.findByNameIgnoreCase(title);
         return new RecipeDTO(
+                recipeByName.getId(),
                 recipeByName.getName(),
                 recipeByName.getPreparationDescription(),
                 recipeByName.getIngredients()
         );
+    }
+
+    @Override
+    public Recipe findById(Long recipeId) {
+        if (recipeRepository.findById(recipeId).isEmpty()) {
+            throw new IllegalArgumentException("Recipe with this id does not exist.");
+        }
+        return recipeRepository.findById(recipeId).get();
     }
 
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {
