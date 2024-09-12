@@ -13,4 +13,6 @@ public interface UserService {
     void addRecipeToFavorites(Long recipeId, String userEmail);
 
     void removeRecipeFromFavorites(Long recipeId, String userEmail);
+
+    boolean isFavorite(Long recipeId, String userEmail);
 }

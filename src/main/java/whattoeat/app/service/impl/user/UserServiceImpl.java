@@ -90,6 +90,13 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(user);
     }
 
+    @Override
+    public boolean isFavorite(Long recipeId, String userEmail) {
+        Recipe recipeById = recipeService.findById(recipeId);
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return user.getFavoriteRecipes().contains(recipeById.getName());
+    }
+
     private User mapUser(RegisterUserDTO registerUserDTO) {
         User user = new User();
         user.setEmail(registerUserDTO.getEmail());

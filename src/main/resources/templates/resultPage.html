@@ -56,26 +56,42 @@
             <div class="d-flex justify-content-around">
                 <h3 th:text="${recipe.name}">Recipe Name</h3>
                 <div>
-                    <form th:action="@{/addToFavorite}" method="post">
-                        <input type="hidden" name="recipeId" th:value="${recipe.id}" />
-                        <button type="submit" value="Добави в любими" id="addToFavoriteBtn"><i class="fa-regular fa-heart"></i></button>
-                    </form>
-                    <form th:action="@{/removeFromFavorite}" method="post">
-                        <input type="hidden" name="recipeId" th:value="${recipe.id}" />
-                        <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn"><i class="fa-solid fa-heart"></i></button>
-                    </form>
+                    <div th:if="${isFavorite != true}">
+                        <form th:action="@{/addToFavorite}" method="post">
+                            <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
+                            <input type="hidden" name="searchType" th:value="${searchType}"/>
+                            <input type="hidden" name="productName" th:value="${productName}"/>
+                            <input type="hidden" name="recipeName" th:value="${recipeName}"/>
+                            <input type="hidden" name="page" th:value="${page.number}"/>
+                            <input type="hidden" name="size" th:value="${page.size}"/>
+                            <button type="submit" value="Добави в любими" id="addToFavoriteBtn"><i
+                                    class="fa-regular fa-heart"></i></button>
+                        </form>
+                    </div>
+
+                    <div th:if="${isFavorite == true}">
+                        <form th:action="@{/removeFromFavorite}" method="post">
+                            <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
+                            <input type="hidden" name="searchType" th:value="${searchType}"/>
+                            <input type="hidden" name="productName" th:value="${productName}"/>
+                            <input type="hidden" name="recipeName" th:value="${recipeName}"/>
+                            <input type="hidden" name="page" th:value="${page.number}"/>
+                            <input type="hidden" name="size" th:value="${page.size}"/>
+                            <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn"><i
+                                    class="fa-solid fa-heart"></i></button>
+                        </form>
+                    </div>
+
                 </div>
-<!--                <div>-->
-<!--                    <button value="Харесвам!"><i class="fa-regular fa-thumbs-up"></i></button>-->
-<!--                    <button value="Харесано!"><i class="fa-solid fa-thumbs-up"></i></button>-->
-<!--                </div>-->
+                <!--                <div>-->
+                <!--                    <button value="Харесвам!"><i class="fa-regular fa-thumbs-up"></i></button>-->
+                <!--                    <button value="Харесано!"><i class="fa-solid fa-thumbs-up"></i></button>-->
+                <!--                </div>-->
             </div>
             <h5>Необходими продукти:</h5>
             <div th:each="ingredient : ${recipe.getIngredients()}">
                 <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>
             </div>
-            <!--            <p th:text="${recipe.preparationDescription}">Preparation Description</p>-->
-            <!--            <p th:text="${#strings.abbreviate(recipe.preparationDescription, 100)}">Preparation Description</p>-->
             <button class="btn btn-link" onclick="toggleContent(this)">Цъкни за рецепта</button>
             <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>
         </div>

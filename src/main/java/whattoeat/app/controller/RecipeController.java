@@ -17,21 +17,28 @@ public class RecipeController {
     public RecipeController(UserService userService) {
         this.userService = userService;
     }
-
-
-    @PostMapping("/addToFavorite")
-    public ResponseEntity<Void> addToFavorites(@RequestParam Long recipeId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-        userService.addRecipeToFavorites(recipeId, userEmail);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/removeFromFavorite")
-    public ResponseEntity<Void> removeFromFavorites(@RequestParam Long recipeId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-        userService.removeRecipeFromFavorites(recipeId, userEmail);
-        return ResponseEntity.ok().build();
-    }
+//
+//    @ModelAttribute("isFavorite")
+//    public boolean isFavorite(@RequestParam Long recipeId) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = authentication.getName();
+//        return userService.isFavorite(recipeId, userEmail);
+//    }
+//
+//
+//    @PostMapping("/addToFavorite")
+//    public String addToFavorites(@RequestParam Long recipeId) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = authentication.getName();
+//        userService.addRecipeToFavorites(recipeId, userEmail);
+//        return "redirect:/resultPage";
+//    }
+//
+//    @PostMapping("/removeFromFavorite")
+//    public String removeFromFavorites(@RequestParam Long recipeId) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = authentication.getName();
+//        userService.removeRecipeFromFavorites(recipeId, userEmail);
+//        return "redirect:/resultPage";
+//    }
 }
