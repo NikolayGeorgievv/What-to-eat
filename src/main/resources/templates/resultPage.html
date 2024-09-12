@@ -56,7 +56,7 @@
             <div class="d-flex justify-content-around">
                 <h3 th:text="${recipe.name}">Recipe Name</h3>
                 <div>
-                    <div th:if="${isFavorite != true}">
+                    <div th:if="${favoritesMap[recipe.id] != true}">
                         <form th:action="@{/addToFavorite}" method="post">
                             <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
                             <input type="hidden" name="searchType" th:value="${searchType}"/>
@@ -69,7 +69,7 @@
                         </form>
                     </div>
 
-                    <div th:if="${isFavorite == true}">
+                    <div th:if="${favoritesMap[recipe.id] == true}">
                         <form th:action="@{/removeFromFavorite}" method="post">
                             <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
                             <input type="hidden" name="searchType" th:value="${searchType}"/>

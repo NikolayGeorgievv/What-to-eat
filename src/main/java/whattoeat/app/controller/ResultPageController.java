@@ -14,6 +14,8 @@ import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
+import java.util.Map;
+
 @Controller
 public class ResultPageController {
 
@@ -48,6 +50,7 @@ public class ResultPageController {
             resultPage = recipeService.searchByRecipeName(recipeName, PageRequest.of(page, size));
         }
         model.addAttribute("page", resultPage);
+        model.addAttribute("favoritesMap", getFavorites());
 
         return "resultPage";
     }
@@ -60,14 +63,12 @@ public class ResultPageController {
     }
 
 
-    @ModelAttribute("isFavorite")
-    public boolean isFavorite(@RequestParam(required = false) Long recipeId) {
-        if (recipeId == null) {
-            return false;
-        }
+    @ModelAttribute("favoritesMap")
+    public Map<Long, Boolean> getFavorites() {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
-        return userService.isFavorite(recipeId, userEmail);
+        return userService.getFavorites(userEmail);
     }
 
 

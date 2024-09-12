@@ -16,7 +16,9 @@ import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -91,11 +93,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isFavorite(Long recipeId, String userEmail) {
-        Recipe recipeById = recipeService.findById(recipeId);
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return user.getFavoriteRecipes().contains(recipeById.getName());
+    public Map<Long, Boolean> getFavorites(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Map<Long, Boolean> userFavorites = new HashMap<>();
+        user.getFavoriteRecipes().forEach(recipeName -> {
+            Recipe recipe = recipeService.findByName(recipeName);
+            userFavorites.put(recipe.getId(), true);
+        });
+        return userFavorites;
     }
+
 
     private User mapUser(RegisterUserDTO registerUserDTO) {
         User user = new User();

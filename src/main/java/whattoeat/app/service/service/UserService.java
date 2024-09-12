@@ -3,6 +3,8 @@ package whattoeat.app.service.service;
 import org.springframework.security.core.Authentication;
 import whattoeat.app.dto.RegisterUserDTO;
 
+import java.util.Map;
+
 public interface UserService {
 
     Authentication login(String email);
@@ -14,5 +16,5 @@ public interface UserService {
 
     void removeRecipeFromFavorites(Long recipeId, String userEmail);
 
-    boolean isFavorite(Long recipeId, String userEmail);
+    Map<Long, Boolean> getFavorites(String email);
 }

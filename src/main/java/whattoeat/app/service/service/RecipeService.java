@@ -15,4 +15,6 @@ public interface RecipeService {
     RecipeDTO findByTitle(String title);
 
     Recipe findById(Long recipeId);
+
+    Recipe findByName(String recipeName);
 }

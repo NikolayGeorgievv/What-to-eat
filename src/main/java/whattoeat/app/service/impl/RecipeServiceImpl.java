@@ -94,6 +94,15 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(recipeId).get();
     }
 
+    @Override
+    public Recipe findByName(String recipeName) {
+        Optional<Recipe> byName = recipeRepository.findByName(recipeName);
+        if (byName.isEmpty()) {
+            throw new IllegalArgumentException("Recipe with this name does not exist.");
+        }
+        return byName.get();
+    }
+
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {
         List<RecipeDTO> recipeDTOs = mapRecipes(allRecipesByName);
 
