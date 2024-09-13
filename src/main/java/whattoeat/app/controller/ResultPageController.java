@@ -6,14 +6,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -71,36 +69,62 @@ public class ResultPageController {
         return userService.getFavorites(userEmail);
     }
 
-
     @PostMapping("/addToFavorite")
-    public String addToFavorites(
-            @RequestParam Long recipeId,
-            @RequestParam String searchType,
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String recipeName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @ResponseBody
+    public Map<String, Object> addToFavorite(@RequestParam Long recipeId, Authentication authentication) {
         String userEmail = authentication.getName();
-        userService.addRecipeToFavorites(recipeId, userEmail);
+        try {
+            userService.addRecipeToFavorites(recipeId, userEmail);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        return redirectResultPage(searchType, productName, recipeName, page, size, model);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("favoritesMap", getFavorites());
+        return response;
     }
-
     @PostMapping("/removeFromFavorite")
-    public String removeFromFavorites(
-            @RequestParam Long recipeId,
-            @RequestParam String searchType,
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String recipeName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @ResponseBody
+    public Map<String, Object> removeFromFavorite(@RequestParam Long recipeId, Authentication authentication) {
         String userEmail = authentication.getName();
         userService.removeRecipeFromFavorites(recipeId, userEmail);
 
-        return redirectResultPage(searchType, productName, recipeName, page, size, model);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("favoritesMap", getFavorites());
+        return response;
     }
+
+//    @PostMapping("/addToFavorite")
+//    public String addToFavorites(
+//            @RequestParam Long recipeId,
+//            @RequestParam String searchType,
+//            @RequestParam(required = false) String productName,
+//            @RequestParam(required = false) String recipeName,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "3") int size, Model model) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = authentication.getName();
+//        userService.addRecipeToFavorites(recipeId, userEmail);
+//
+//        return redirectResultPage(searchType, productName, recipeName, page, size, model);
+//    }
+
+//    @PostMapping("/removeFromFavorite")
+//    public String removeFromFavorites(
+//            @RequestParam Long recipeId,
+//            @RequestParam String searchType,
+//            @RequestParam(required = false) String productName,
+//            @RequestParam(required = false) String recipeName,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "3") int size, Model model) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = authentication.getName();
+//        userService.removeRecipeFromFavorites(recipeId, userEmail);
+//
+//        return redirectResultPage(searchType, productName, recipeName, page, size, model);
+//    }
 
     private String redirectResultPage(
             @RequestParam String searchType,

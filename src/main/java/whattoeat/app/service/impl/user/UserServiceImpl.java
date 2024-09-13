@@ -80,6 +80,9 @@ public class UserServiceImpl implements UserService {
     public void addRecipeToFavorites(Long recipeId, String userEmail) {
         Recipe recipeById = recipeService.findById(recipeId);
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (user.getFavoriteRecipes().contains(recipeById.getName())) {
+            throw new IllegalArgumentException("Recipe is already in favorites");
+        }
         user.getFavoriteRecipes().add(recipeById.getName());
         userRepository.saveAndFlush(user);
     }
