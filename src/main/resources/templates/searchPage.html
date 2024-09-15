@@ -16,95 +16,10 @@
 
 <div th:replace="~{fragments/nav-bar}"></div>
 
-
-
-<div class="container my-5">
-    <div class="d-flex justify-content-center mb-4">
-        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2">Търси по продукти</button>
-        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Търси по рецепта</button>
-    </div>
-    <form id="searchForm" action="/search" method="get">
-        <input type="hidden" id="searchType" name="searchType" value="product">
-        <div id="productSearch" class="search-section">
-            <h2>Търси по продукти</h2>
-            <input type="text" class="form-control" name="productName" placeholder="Въведи продукт/продукти..">
-        </div>
-        <div id="recipeSearch" class="search-section d-none">
-            <h2>Търси по рецепта</h2>
-            <input type="text" class="form-control" name="recipeName" placeholder="Въведи име на рецепта">
-        </div>
-        <button type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton">Търси</button>
-    </form>
-</div>
+<div th:replace="~{fragments/search-bar}"></div>
 
 <div th:replace="~{fragments/popular_recipes}"></div>
 
 
-
-
-
-
-<script>
-    document.getElementById('productSearchBtn').addEventListener('click', function() {
-        document.getElementById('productSearch').classList.remove('d-none');
-        document.getElementById('recipeSearch').classList.add('d-none');
-        document.getElementById('searchType').value = 'product';
-    });
-
-    document.getElementById('recipeSearchBtn').addEventListener('click', function() {
-        document.getElementById('recipeSearch').classList.remove('d-none');
-        document.getElementById('productSearch').classList.add('d-none');
-        document.getElementById('searchType').value = 'recipe';
-    });
-    document.getElementById('productSearchBtn').addEventListener('click', function() {
-        this.classList.add('btn-selected');
-        document.getElementById('recipeSearchBtn').classList.remove('btn-selected');
-    });
-
-    document.getElementById('recipeSearchBtn').addEventListener('click', function() {
-        this.classList.add('btn-selected');
-        document.getElementById('productSearchBtn').classList.remove('btn-selected');
-    });
-</script>
-
-
 </body>
-<style>
-    body {
-        margin: 0;
-        height: 100vh;
-        background: linear-gradient(to right, #f8f3ef 66.67%, white 33.33%);
-    }
-    .search-section {
-        transition: opacity 0.5s ease-in-out;
-    }
-
-    .d-none {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .btn{
-        color: black;
-    }
-
-    .searchButton{
-        margin-top: 20px;
-        margin-right: 100%;
-        margin-left: 67%!important;
-    }
-    *{
-        font-family: 'Lobster', sans-serif;
-    }
-
-    .btn-selected {
-        background-color: #ffc107;
-        color: black;
-    }
-    .form-control{
-        border: 1px, solid, lightgrey;
-        width: 74.5%;
-        background: #f8f3ef;
-    }
-</style>
 </html>
