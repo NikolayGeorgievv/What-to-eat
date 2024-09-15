@@ -66,6 +66,9 @@ public class ResultPageController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
+        if (userEmail.equals("anonymousUser")) {
+            return new HashMap<>();
+        }
         return userService.getFavorites(userEmail);
     }
 
