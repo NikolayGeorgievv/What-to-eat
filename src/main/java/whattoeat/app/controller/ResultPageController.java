@@ -57,7 +57,7 @@ public class ResultPageController {
     public String getRecipe(@RequestParam("title") String title, Model model) {
         RecipeDTO recipe = recipeService.findByTitle(title);
         model.addAttribute("recipe", recipe);
-        return "popularRecipeResult";
+        return "singleRecipeResult";
     }
 
 
@@ -98,36 +98,6 @@ public class ResultPageController {
         response.put("favoritesMap", getFavorites());
         return response;
     }
-
-//    @PostMapping("/addToFavorite")
-//    public String addToFavorites(
-//            @RequestParam Long recipeId,
-//            @RequestParam String searchType,
-//            @RequestParam(required = false) String productName,
-//            @RequestParam(required = false) String recipeName,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "3") int size, Model model) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String userEmail = authentication.getName();
-//        userService.addRecipeToFavorites(recipeId, userEmail);
-//
-//        return redirectResultPage(searchType, productName, recipeName, page, size, model);
-//    }
-
-//    @PostMapping("/removeFromFavorite")
-//    public String removeFromFavorites(
-//            @RequestParam Long recipeId,
-//            @RequestParam String searchType,
-//            @RequestParam(required = false) String productName,
-//            @RequestParam(required = false) String recipeName,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "3") int size, Model model) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String userEmail = authentication.getName();
-//        userService.removeRecipeFromFavorites(recipeId, userEmail);
-//
-//        return redirectResultPage(searchType, productName, recipeName, page, size, model);
-//    }
 
     private String redirectResultPage(
             @RequestParam String searchType,
