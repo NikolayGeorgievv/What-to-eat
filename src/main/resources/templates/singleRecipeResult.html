@@ -27,7 +27,7 @@
         </div>
         <!--            <p th:text="${recipe.preparationDescription}">Preparation Description</p>-->
 <!--        <p th:text="${#strings.abbreviate(recipe.preparationDescription, 100)}">Preparation Description</p>-->
-        <button class="btn btn-link" onclick="toggleContent(this)">Цъкни за цялата рецепта</button>
+        <button class="btn btn-link button" onclick="toggleContent(this)">Цъкни за цялата рецепта</button>
         <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>
     </div>
 </div>
@@ -67,6 +67,9 @@
 
     .btn {
         color: black;
+    }
+    .button{
+        color: brown;
     }
 </style>
 </html>
