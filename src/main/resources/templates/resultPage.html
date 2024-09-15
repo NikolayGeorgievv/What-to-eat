@@ -23,11 +23,11 @@
 <div class="container my-1 d-flex flex-column align-items-center" id="recipeContainer">
     <nav>
         <ul class="pagination justify-content-center">
-            <li class="page-item"><a th:if="${page.hasPrevious()}"
+            <li class="page-item page-button"><a th:if="${page.hasPrevious()}"
                                      th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Предишна</a>
             </li>
             <li class="page-item"><span th:text="'(' +  ${page.number + 1} + ')'">1</span></li>
-            <li class="page-item"><a th:if="${page.hasNext()}"
+            <li class="page-item page-button"><a th:if="${page.hasNext()}"
                                      th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Следваща</a>
             </li>
         </ul>
@@ -194,13 +194,13 @@
 </body>
 
 <style>
-       .d-none {
+    .d-none {
         opacity: 0;
         pointer-events: none;
     }
 
-    .btn {
-        color: black;
+    .btn-link, .page-button {
+        color: brown;
     }
 
     #results {
