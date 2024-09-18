@@ -27,7 +27,7 @@
               th:action="@{/addCustomRecipe}"
               th:method="post"
               class="col-10 col-sm-8 col-lg-6">
-            <div class="form-row"  id="addRecipeContainer">
+            <div class="form-row" id="addRecipeContainer">
                 <div class="form-group col-md-6">
                     <label for="recipeName">Име на рецептата</label>
                     <input type="text" class="form-control" id="recipeName" name="recipeName"
@@ -76,8 +76,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group col-md-6 d-flex flex-column">
+                    <label for="preparationDescription">Начин на приготвяне</label>
+
+                    <textarea id="preparationDescription" name="preparationDescription" rows="4" cols="50"></textarea>
+                </div>
             </div>
-            <button type="button" class="btn btn-outline-secondary" id="addRowButton">Добави още</button>
+            <button type="button" class="btn btn-outline-secondary" id="addRowButton">Добави още продукти</button>
             <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold"
             >Качи рецепта!
             </button>
@@ -86,7 +91,7 @@
 </div>
 
 <script>
-    document.getElementById('addRowButton').addEventListener('click', function() {
+    document.getElementById('addRowButton').addEventListener('click', function () {
         const container = document.getElementById('addRecipeContainer'); // Adjust the container ID if necessary
         const newRow = document.createElement('div');
         newRow.classList.add('form-group', 'col-md-6', 'd-flex');
@@ -103,7 +108,7 @@
         container.appendChild(newRow);
     });
 
-    document.getElementById('addRecipeForm').addEventListener('submit', function(event) {
+    document.getElementById('addRecipeForm').addEventListener('submit', function (event) {
         event.preventDefault();
 
         const formData = new FormData(this);
@@ -122,6 +127,8 @@
                 data[key].push(value);
             }
         });
+
+        data.preparationDescription = formData.get('preparationDescription') || "";
 
         fetch(this.action, {
             method: 'POST',
