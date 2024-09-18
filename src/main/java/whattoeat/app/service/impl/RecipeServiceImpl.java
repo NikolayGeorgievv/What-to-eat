@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.model.Ingredient;
@@ -19,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static whattoeat.app.constants.Constants.INVALID_RECIPE_NAME;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -66,7 +69,7 @@ public class RecipeServiceImpl implements RecipeService {
     private List<RecipeDTO> mapRecipes(List<Recipe> allByIngredients) {
         List<RecipeDTO> recipeDTOs = new ArrayList<>();
         allByIngredients.forEach(recipe -> {
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getId() ,recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
+            RecipeDTO recipeDTO = new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
             recipeDTOs.add(recipeDTO);
         });
         return recipeDTOs;
@@ -109,7 +112,35 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void addCustomRecipe(CustomRecipeFromUsers customRecipe) {
+        if (recipeRepository.findByName(customRecipe.getRecipeName()).isPresent()) {
+            throw new IllegalArgumentException(INVALID_RECIPE_NAME);
+        }
         customRecipeFromUsersRepository.saveAndFlush(customRecipe);
+    }
+
+    @Override
+    public List<CreateCustomRecipeDTO> getAllCustomRecipes() {
+        List<CustomRecipeFromUsers> allCustomRecipes = customRecipeFromUsersRepository.findAll();
+        List<CreateCustomRecipeDTO> customRecipeDTOs = new ArrayList<>();
+
+
+        allCustomRecipes.forEach(customRecipe -> {
+            CreateCustomRecipeDTO createCustomRecipeDTO = new CreateCustomRecipeDTO(
+                    customRecipe.getRecipeName(),
+                    new ArrayList<>(),
+                    new ArrayList<>(),
+                    customRecipe.getDescription()
+            );
+            String[] rowsArr = customRecipe.getProductNameAndQuantity().split("\\n");
+            for (int i = 0; i < rowsArr.length; i++) {
+                String productName = rowsArr[i].split(" - ")[0];
+                String quantity = rowsArr[i].split(" -")[1];
+                createCustomRecipeDTO.getProductName().add(productName);
+                createCustomRecipeDTO.getQuantity().add(quantity);
+            }
+            customRecipeDTOs.add(createCustomRecipeDTO);
+        });
+        return customRecipeDTOs;
     }
 
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {

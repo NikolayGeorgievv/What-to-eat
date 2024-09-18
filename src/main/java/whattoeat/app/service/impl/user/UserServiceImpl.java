@@ -12,6 +12,7 @@ import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.model.Recipe;
 import whattoeat.app.model.User;
 import whattoeat.app.model.UserRoleEntity;
+import whattoeat.app.repository.CustomRecipeFromUsersRepository;
 import whattoeat.app.repository.RolesRepository;
 import whattoeat.app.repository.UserRepository;
 import whattoeat.app.service.service.RecipeService;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static whattoeat.app.constants.Constants.INVALID_RECIPE_NAME;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -30,13 +33,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
     private final RecipeService recipeService;
+    private final CustomRecipeFromUsersRepository customRecipeFromUsersRepository;
 
-    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService) {
+    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService, CustomRecipeFromUsersRepository customRecipeFromUsersRepository) {
         this.userDetail = userDetail;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
         this.recipeService = recipeService;
+        this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
     }
 
 
@@ -117,6 +122,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addCustomRecipe(String userEmail, CreateCustomRecipeDTO recipeDTO) {
+        if (customRecipeFromUsersRepository.findByRecipeName(recipeDTO.getRecipeName()).isPresent()) {
+            throw new IllegalArgumentException(INVALID_RECIPE_NAME);
+        }
+
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         CustomRecipeFromUsers customRecipe = mapCustomRecipe(recipeDTO, user);
