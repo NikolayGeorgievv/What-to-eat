@@ -19,6 +19,13 @@ public class CreateCustomRecipeDTO {
     public CreateCustomRecipeDTO() {
     }
 
+    public CreateCustomRecipeDTO(String recipeName, List<String> productName, List<String> quantity, String preparationDescription) {
+        this.recipeName = recipeName;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.preparationDescription = preparationDescription;
+    }
+
     public String getRecipeName() {
         return recipeName;
     }

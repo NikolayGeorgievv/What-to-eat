@@ -40,6 +40,7 @@ public class UserController {
 
     @PostMapping("/addCustomRecipe")
     public ResponseEntity<?> addCustomRecipe(@RequestBody @Valid CreateCustomRecipeDTO recipeDTO, BindingResult bindingResult) {
+        //TODO: Add validation of unique recipe name
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             bindingResult.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
@@ -48,7 +49,11 @@ public class UserController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
-        userService.addCustomRecipe(userEmail, recipeDTO);
+        try {
+            userService.addCustomRecipe(userEmail, recipeDTO);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("recipeNameNotUnique", e.getMessage()));
+        }
         return ResponseEntity.ok().build();
     }
 
