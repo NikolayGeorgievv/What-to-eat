@@ -1,5 +1,6 @@
 package whattoeat.app.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -7,10 +8,12 @@ import java.util.List;
 public class CreateCustomRecipeDTO {
 
     @Size(max = 100, message = "Името на рецептата е твърде дълго.")
+    @NotEmpty
     private String recipeName;
     private List<String> productName;
     private List<String> quantity;
     @Size(max = 2500, message = "Описанието на приготвянето е твърде дълго.")
+    @NotEmpty
     private String preparationDescription;
 
     public CreateCustomRecipeDTO() {
