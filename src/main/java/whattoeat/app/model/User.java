@@ -2,7 +2,6 @@ package whattoeat.app.model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,9 +13,6 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private List<CustomRecipeFromUsers> customRecipeFromUsers = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "user_favorite_recipes", joinColumns = @JoinColumn(name = "user_id"))
@@ -74,14 +70,6 @@ public class User extends BaseEntity{
 
     public void setRoles(List<UserRoleEntity> roles) {
         this.roles = roles;
-    }
-
-    public List<CustomRecipeFromUsers> getCustomRecipeFromUsers() {
-        return customRecipeFromUsers;
-    }
-
-    public void setCustomRecipeFromUsers(List<CustomRecipeFromUsers> customRecipeFromUsers) {
-        this.customRecipeFromUsers = customRecipeFromUsers;
     }
 
     public List<String> getRecipesAddedByUser() {

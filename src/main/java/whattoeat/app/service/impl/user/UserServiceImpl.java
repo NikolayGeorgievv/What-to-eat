@@ -120,6 +120,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         CustomRecipeFromUsers customRecipe = mapCustomRecipe(recipeDTO, user);
+
+        // TODO: The admin should perform this action when if the recipe is approved
+//        user.getRecipesAddedByUser().add(customRecipe.getRecipeName());
+//        userRepository.saveAndFlush(user);
         recipeService.addCustomRecipe(customRecipe);
     }
 
