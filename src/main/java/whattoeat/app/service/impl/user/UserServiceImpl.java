@@ -6,7 +6,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.dto.RegisterUserDTO;
+import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.model.Recipe;
 import whattoeat.app.model.User;
 import whattoeat.app.model.UserRoleEntity;
@@ -113,6 +115,30 @@ public class UserServiceImpl implements UserService {
         return user.getFavoriteRecipes();
     }
 
+    @Override
+    public void addCustomRecipe(String userEmail, CreateCustomRecipeDTO recipeDTO) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        CustomRecipeFromUsers customRecipe = mapCustomRecipe(recipeDTO, user);
+        recipeService.addCustomRecipe(customRecipe);
+    }
+
+    private CustomRecipeFromUsers mapCustomRecipe(CreateCustomRecipeDTO recipeDTO, User user) {
+
+        CustomRecipeFromUsers customRecipe = new CustomRecipeFromUsers();
+        customRecipe.setAddedByUser(user);
+        customRecipe.setRecipeName(recipeDTO.getRecipeName());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < recipeDTO.getProductName().size(); i++) {
+            if (!recipeDTO.getProductName().get(i).equals("emptyNameSkipThisProduct")) {
+                sb.append(recipeDTO.getProductName().get(i)).append(" - ").append(recipeDTO.getQuantity().get(i)).append("\n");
+            }
+        }
+        customRecipe.setProductNameAndQuantity(sb.toString());
+        customRecipe.setDescription(recipeDTO.getPreparationDescription());
+        return customRecipe;
+    }
+
 
     private User mapUser(RegisterUserDTO registerUserDTO) {
         User user = new User();
@@ -120,6 +146,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
         List<String> favoriteRecipes = new ArrayList<>();
         user.setFavoriteRecipes(favoriteRecipes);
+        List<String> recipesAddedByUser = new ArrayList<>();
+        user.setRecipesAddedByUser(recipesAddedByUser);
+        //TODO: Check for customRecipeFromUsers impl
         return user;
     }
 }

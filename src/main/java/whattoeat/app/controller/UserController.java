@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import whattoeat.app.dto.CreateRecipeDTO;
+import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.service.service.UserService;
 
 import java.util.List;
@@ -33,11 +33,11 @@ public class UserController {
     }
 
     @PostMapping("addCustomRecipe")
-    public String addCustomRecipe(@RequestBody CreateRecipeDTO recipeDTO) {
+    public String addCustomRecipe(@RequestBody CreateCustomRecipeDTO recipeDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
-
+        userService.addCustomRecipe(userEmail, recipeDTO);
         return "redirect:/userProfile";
     }
 

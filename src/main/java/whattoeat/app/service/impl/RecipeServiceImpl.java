@@ -5,8 +5,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import whattoeat.app.dto.RecipeDTO;
+import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
+import whattoeat.app.repository.CustomRecipeFromUsersRepository;
 import whattoeat.app.repository.IngredientRepository;
 import whattoeat.app.repository.RecipeIngredientsRepository;
 import whattoeat.app.repository.RecipeRepository;
@@ -24,11 +26,13 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientsRepository recipeIngredientsRepository;
+    private final CustomRecipeFromUsersRepository customRecipeFromUsersRepository;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, RecipeIngredientsRepository recipeIngredientsRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, RecipeIngredientsRepository recipeIngredientsRepository, CustomRecipeFromUsersRepository customRecipeFromUsersRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.recipeIngredientsRepository = recipeIngredientsRepository;
+        this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
     }
 
     @Override
@@ -101,6 +105,11 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException("Recipe with this name does not exist.");
         }
         return byName.get();
+    }
+
+    @Override
+    public void addCustomRecipe(CustomRecipeFromUsers customRecipe) {
+        customRecipeFromUsersRepository.saveAndFlush(customRecipe);
     }
 
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {

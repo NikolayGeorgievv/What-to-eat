@@ -2,12 +2,16 @@ package whattoeat.app.dto;
 
 import java.util.List;
 
-public class CreateRecipeDTO {
+public class CreateCustomRecipeDTO {
 
     //TODO: ADD VALIDATION
     private String recipeName;
     private List<String> productName;
     private List<String> quantity;
+    private String preparationDescription;
+
+    public CreateCustomRecipeDTO() {
+    }
 
     public String getRecipeName() {
         return recipeName;
@@ -31,5 +35,13 @@ public class CreateRecipeDTO {
 
     public void setQuantity(List<String> quantity) {
         this.quantity = quantity;
+    }
+
+    public String getPreparationDescription() {
+        return preparationDescription;
+    }
+
+    public void setPreparationDescription(String preparationDescription) {
+        this.preparationDescription = preparationDescription;
     }
 }

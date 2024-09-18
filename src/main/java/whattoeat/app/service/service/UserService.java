@@ -1,6 +1,7 @@
 package whattoeat.app.service.service;
 
 import org.springframework.security.core.Authentication;
+import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.dto.RegisterUserDTO;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface UserService {
     Map<Long, Boolean> getFavorites(String email);
 
     List<String> getFavoriteRecipes(String userEmail);
+
+    void addCustomRecipe(String userEmail, CreateCustomRecipeDTO recipeDTO);
 }

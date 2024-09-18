@@ -14,6 +14,7 @@ public class CML implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        //TODO: ADD a check if the data is already inserted
         csvService.readCsvAndInsertData();
     }
 }
