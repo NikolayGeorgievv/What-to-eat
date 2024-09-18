@@ -38,7 +38,7 @@ public class UserController {
         String userEmail = authentication.getName();
 
         userService.addCustomRecipe(userEmail, recipeDTO);
-        return "redirect:/userProfile";
+        return "userProfile";
     }
 
     @ModelAttribute("favoriteRecipes")

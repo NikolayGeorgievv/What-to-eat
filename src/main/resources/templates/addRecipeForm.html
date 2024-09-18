@@ -26,64 +26,64 @@
         <form id="addRecipeForm"
               th:action="@{/addCustomRecipe}"
               th:method="post"
-              class="col-10 col-sm-8 col-lg-6">
+              class="col-10 col-sm-10 col-lg-8">
             <div class="form-row" id="addRecipeContainer">
                 <div class="form-group col-md-6">
                     <label for="recipeName">Име на рецептата</label>
                     <input type="text" class="form-control" id="recipeName" name="recipeName"
-                           placeholder="Въведи име на рецептата">
+                           placeholder="Въведи име на рецептата" maxlength="100">
                     <!--                    <p th:if="${#fields.hasErrors('nameTaken')}" class="errors">Името вече се използва</p>-->
                 </div>
                 <div class="form-group col-md-6 d-flex flex-column">
                     <div class="d-flex">
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column inputFieldHolder">
                             <label for="productName">Продукт</label>
-                            <input class="form-control" id="productName" name="productName"
-                                   placeholder="Въведи продукт">
+                            <input class="form-control inputField" id="productName" name="productName"
+                                   placeholder="Въведи продукт" maxlength="100">
                         </div>
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column inputFieldHolder">
                             <label for="quantity">Количество/мярка</label>
-                            <input class="form-control" id="quantity" name="quantity"
-                                   placeholder="Въведи количество/мярка">
+                            <input class="form-control inputField" id="quantity" name="quantity"
+                                   placeholder="Въведи количество/мярка" maxlength="100">
                         </div>
                     </div>
                 </div>
                 <div class="form-group col-md-6 d-flex flex-column">
                     <div class="d-flex">
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column inputFieldHolder">
                             <label for="productName">Продукт</label>
-                            <input class="form-control" id="productName1" name="productName"
-                                   placeholder="Въведи продукт">
+                            <input class="form-control inputField" id="productName1" name="productName"
+                                   placeholder="Въведи продукт" maxlength="100">
                         </div>
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column inputFieldHolder">
                             <label for="quantity">Количество/мярка</label>
-                            <input class="form-control" id="quantity1" name="quantity"
-                                   placeholder="Въведи количество/мярка">
+                            <input class="form-control inputField" id="quantity1" name="quantity"
+                                   placeholder="Въведи количество/мярка" maxlength="100">
                         </div>
                     </div>
                 </div>
                 <div class="form-group col-md-6 d-flex flex-column">
                     <div class="d-flex">
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column inputFieldHolder">
                             <label for="productName">Продукт</label>
-                            <input class="form-control" id="productName2" name="productName"
-                                   placeholder="Въведи продукт">
+                            <input class="form-control inputField" id="productName2" name="productName"
+                                   placeholder="Въведи продукт" maxlength="100">
                         </div>
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column inputFieldHolder">
                             <label for="quantity">Количество/мярка</label>
-                            <input class="form-control" id="quantity2" name="quantity"
-                                   placeholder="Въведи количество/мярка">
+                            <input class="form-control inputField" id="quantity2" name="quantity"
+                                   placeholder="Въведи количество/мярка" maxlength="100">
                         </div>
                     </div>
                 </div>
                 <div class="form-group col-md-6 d-flex flex-column">
                     <label for="preparationDescription">Начин на приготвяне</label>
 
-                    <textarea id="preparationDescription" name="preparationDescription" rows="4" cols="50"></textarea>
+                    <textarea id="preparationDescription" name="preparationDescription" rows="5" cols="50" maxlength="2500"></textarea>
                 </div>
             </div>
             <button type="button" class="btn btn-outline-secondary" id="addRowButton">Добави още продукти</button>
-            <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold"
+            <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold" id="uploadRecipeButton"
             >Качи рецепта!
             </button>
         </form>
@@ -92,20 +92,21 @@
 
 <script>
     document.getElementById('addRowButton').addEventListener('click', function () {
-        const container = document.getElementById('addRecipeContainer'); // Adjust the container ID if necessary
+        const container = document.getElementById('addRecipeContainer');
+        const textArea = document.getElementById('preparationDescription').parentElement;
         const newRow = document.createElement('div');
         newRow.classList.add('form-group', 'col-md-6', 'd-flex');
         newRow.innerHTML = `
-        <div class="d-flex flex-column">
-            <label for="productName">Продукт</label>
-            <input class="form-control" id="productName" name="productName" placeholder="Въведи продукт">
-        </div>
-        <div class="d-flex flex-column">
-            <label for="quantity">Количество/мярка</label>
-            <input class="form-control" id="quantity" name="quantity" placeholder="Въведи количество/мярка">
-        </div>
+    <div class="d-flex flex-column inputFieldHolder">
+        <label for="productName">Продукт</label>
+        <input class="form-control inputField" id="productName" name="productName" placeholder="Въведи продукт" maxlength="100">
+    </div>
+    <div class="d-flex flex-column inputFieldHolder">
+        <label for="quantity">Количество/мярка</label>
+        <input class="form-control inputField" id="quantity" name="quantity" placeholder="Въведи количество/мярка" maxlength="100">
+    </div>
     `;
-        container.appendChild(newRow);
+        container.insertBefore(newRow, textArea);
     });
 
     document.getElementById('addRecipeForm').addEventListener('submit', function (event) {
@@ -136,10 +137,48 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).catch(error => {
-            console.error('Error:', error);
-        });
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/userProfile';
+                } else {
+                    console.error('Error:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 </script>
 </body>
+<style>
+    .inputFieldHolder {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+    }
+
+    .inputField {
+        width: 230px;
+    }
+
+    #recipeName {
+        width: 465px;
+    }
+
+    textarea {
+        width: 465px;
+    }
+
+    #addRowButton {
+        margin-top: 10px;
+        width: 200px;
+
+    }
+
+    #uploadRecipeButton {
+        margin-top: 10px;
+        width: 262px;
+    }
+</style>
 </html>
