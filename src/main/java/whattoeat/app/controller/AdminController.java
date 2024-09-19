@@ -55,7 +55,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/rejectRecipe")
     public String rejectCustomRecipe(@RequestParam("recipeName") String title) {
-//        recipeService.rejectCustomRecipe(title);
-        return "adminPage";
+        recipeService.rejectCustomRecipe(title);
+        return "redirect:/adminPage";
     }
 }

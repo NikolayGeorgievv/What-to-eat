@@ -149,6 +149,12 @@ public class RecipeServiceImpl implements RecipeService {
         mapCustomRecipeToRecipeEntityAndFlushIt(customRecipeByName);
     }
 
+    @Override
+    public void rejectCustomRecipe(String title) {
+        CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
+        customRecipeFromUsersRepository.delete(customRecipeByName);
+    }
+
     private void mapCustomRecipeToRecipeEntityAndFlushIt(CustomRecipeFromUsers customRecipeByName) {
 
         Recipe recipe = new Recipe();

@@ -28,4 +28,6 @@ public interface RecipeService {
     CreateCustomRecipeDTO findCustomRecipeByTitle(String title);
 
     void approveCustomRecipe(String title);
+
+    void rejectCustomRecipe(String title);
 }
