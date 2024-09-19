@@ -149,6 +149,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
         List<Notification> notifications = user.getNotifications();
         List<String> notificationMessages = new ArrayList<>();
+        if (notifications.isEmpty()) {
+            String noNotifications = "Все още нямате нови съобщения.";
+            notificationMessages.add(noNotifications);
+            return notificationMessages;
+        }
         for (Notification notification : notifications) {
             notificationMessages.add(notification.getMessage());
         }
