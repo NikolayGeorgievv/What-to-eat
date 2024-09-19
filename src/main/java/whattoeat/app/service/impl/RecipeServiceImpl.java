@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static whattoeat.app.constants.Constants.INVALID_RECIPE_NAME;
+import static whattoeat.app.utils.RecipesUtils.*;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -60,14 +61,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     }
 
-    private List<RecipeDTO> mapRecipes(List<Recipe> allByIngredients) {
-        List<RecipeDTO> recipeDTOs = new ArrayList<>();
-        allByIngredients.forEach(recipe -> {
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
-            recipeDTOs.add(recipeDTO);
-        });
-        return recipeDTOs;
-    }
+
 
     @Override
     public Page<RecipeDTO> searchByRecipeName(String recipeName, PageRequest pageRequest) {
@@ -146,7 +140,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void approveCustomRecipe(String title) {
         CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
-        mapCustomRecipeToRecipeEntityAndFlushIt(customRecipeByName);
+        mapCustomRecipeToRecipeEntityAndFlushIt(customRecipeByName,recipeRepository, ingredientRepository, recipeIngredientsRepository);
     }
 
     @Override
@@ -155,62 +149,7 @@ public class RecipeServiceImpl implements RecipeService {
         customRecipeFromUsersRepository.delete(customRecipeByName);
     }
 
-    private void mapCustomRecipeToRecipeEntityAndFlushIt(CustomRecipeFromUsers customRecipeByName) {
 
-        Recipe recipe = new Recipe();
-        recipe.setName(customRecipeByName.getRecipeName());
-        recipe.setPreparationDescription(customRecipeByName.getDescription());
-        recipeRepository.saveAndFlush(recipe);
-        List<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        String[] rowsArr = customRecipeByName.getProductNameAndQuantity().split("\\n");
-        for (int i = 0; i < rowsArr.length; i++) {
-            String productName = rowsArr[i].split(" - ")[0];
-            String quantity = rowsArr[i].split(" -")[1];
-            RecipeIngredient recipeIngredient = new RecipeIngredient();
-
-            if (ingredientRepository.findByName(productName).isPresent()) {
-                Ingredient ingredient = ingredientRepository.findByName(productName).get();
-                recipeIngredient.setIngredient(ingredient);
-                recipeIngredient.setRecipe(recipe);
-                if (!quantity.isEmpty()) {
-                    recipeIngredient.setQuantity(quantity);
-                }
-            } else {
-                Ingredient ingredient = new Ingredient();
-                ingredient.setName(productName);
-                ingredientRepository.saveAndFlush(ingredient);
-                recipeIngredient.setIngredient(ingredient);
-                recipeIngredient.setRecipe(recipe);
-                if (!quantity.isEmpty()) {
-                    recipeIngredient.setQuantity(quantity);
-                }
-            }
-            recipeIngredients.add(recipeIngredient);
-            recipeIngredientsRepository.saveAndFlush(recipeIngredient);
-
-        }
-        Recipe recipe1 = recipeRepository.findByName(customRecipeByName.getRecipeName()).get();
-        recipe1.setIngredients(recipeIngredients);
-        recipeRepository.saveAndFlush(recipe1);
-    }
-
-    private CreateCustomRecipeDTO mapCustomRecipeToDTO(CustomRecipeFromUsers customRecipeByName) {
-        //TODO: Extract in util class
-        CreateCustomRecipeDTO createCustomRecipeDTO = new CreateCustomRecipeDTO(
-                customRecipeByName.getRecipeName(),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                customRecipeByName.getDescription()
-        );
-        String[] rowsArr = customRecipeByName.getProductNameAndQuantity().split("\\n");
-        for (int i = 0; i < rowsArr.length; i++) {
-            String productName = rowsArr[i].split(" - ")[0];
-            String quantity = rowsArr[i].split(" -")[1];
-            createCustomRecipeDTO.getProductName().add(productName);
-            createCustomRecipeDTO.getQuantity().add(quantity);
-        }
-        return createCustomRecipeDTO;
-    }
 
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {
         List<RecipeDTO> recipeDTOs = mapRecipes(allRecipesByName);
