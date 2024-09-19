@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import whattoeat.app.dto.CreateCustomRecipeDTO;
-import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
@@ -49,6 +48,7 @@ public class AdminController {
     @PostMapping("/approveRecipe")
     public String approveRecipe(@RequestParam("recipeName") String title) {
         recipeService.approveCustomRecipe(title);
+        userService.sendApprovedNotificationToUser(title);
         userService.addCustomRecipeToUser(title);
         return "redirect:/adminPage";
     }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <script src="https://kit.fontawesome.com/1a33788db9.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <title>Nav bar</title>
 </head>
@@ -11,6 +12,19 @@
             <div class="col-md-8 offset-md-2">
                 <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
                     <ul class="navbar-nav">
+                        <li sec:authorize="isAuthenticated()" class="nav-item dropdown text-start">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                               aria-expanded="false" id="notificationContainerAnchor"><i class="fa-regular fa-bell"></i></a>
+                            <div class="dropdown-menu d-flex flex-column justify-content-around hide"
+                                 id="notificationContainer">
+                                <div class="dropdown-item notificationItem"
+                                th:each="notification: ${userNotifications}">
+                                    <div class="d-flex justify-content-between">
+                                        <div th:text="${notification}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" th:href="@{/mainPage}">Начало</a>
                         </li>
@@ -38,7 +52,6 @@
             </div>
 
 
-
             <div sec:authorize="isAnonymous()" class="col-md-2 text-end d-flex">
                 <a th:href="@{/users/login}">
                     <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold"
@@ -57,20 +70,53 @@
                 <form th:method="post"
                       th:action="@{/logout}">
                     <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold" value="Logout"
-                            >Изход</button>
+                    >Изход
+                    </button>
 
                 </form>
             </div>
         </div>
     </div>
 </nav>
+<script>
+    const notificationContainer = document.getElementById('notificationContainer');
+    const notificationAnchor = document.getElementById('notificationContainerAnchor');
+
+    notificationAnchor.addEventListener('click', function (event) {
+        event.stopPropagation();
+        notificationContainer.classList.toggle('hide');
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!notificationContainer.classList.contains('hide') && !notificationContainer.contains(event.target) && event.target !== notificationAnchor) {
+            notificationContainer.classList.add('hide');
+        }
+    });
+</script>
 </body>
 <style>
     .btn {
         color: black;
     }
-    #logoutBtn{
+
+    #logoutBtn {
         width: auto;
+    }
+
+    #notificationContainer {
+        width: 350px;
+        background: aliceblue;
+    }
+
+    .notificationItem {
+        height: 60px;
+    }
+
+    .border {
+        border-top: 1px gray solid;
+    }
+    .hide {
+        display: none!important;
     }
 </style>
 </html>

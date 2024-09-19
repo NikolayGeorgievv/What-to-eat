@@ -8,11 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.dto.RegisterUserDTO;
-import whattoeat.app.model.CustomRecipeFromUsers;
-import whattoeat.app.model.Recipe;
-import whattoeat.app.model.User;
-import whattoeat.app.model.UserRoleEntity;
+import whattoeat.app.model.*;
 import whattoeat.app.repository.CustomRecipeFromUsersRepository;
+import whattoeat.app.repository.NotificationRepository;
 import whattoeat.app.repository.RolesRepository;
 import whattoeat.app.repository.UserRepository;
 import whattoeat.app.service.service.RecipeService;
@@ -31,14 +29,16 @@ public class UserServiceImpl implements UserService {
     private final RolesRepository rolesRepository;
     private final RecipeService recipeService;
     private final CustomRecipeFromUsersRepository customRecipeFromUsersRepository;
+    private final NotificationRepository notificationRepository;
 
-    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService, CustomRecipeFromUsersRepository customRecipeFromUsersRepository) {
+    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService, CustomRecipeFromUsersRepository customRecipeFromUsersRepository, NotificationRepository notificationRepository) {
         this.userDetail = userDetail;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
         this.recipeService = recipeService;
         this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
+        this.notificationRepository = notificationRepository;
     }
 
 
@@ -144,6 +144,32 @@ public class UserServiceImpl implements UserService {
         return user.getRecipesAddedByUser();
     }
 
+    @Override
+    public List<String> getUserNotifications(String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<Notification> notifications = user.getNotifications();
+        List<String> notificationMessages = new ArrayList<>();
+        for (Notification notification : notifications) {
+            notificationMessages.add(notification.getMessage());
+        }
+        return notificationMessages;
+    }
+
+    @Override
+    public void sendApprovedNotificationToUser(String title) {
+        CustomRecipeFromUsers customRecipe = customRecipeFromUsersRepository.findByRecipeName(title).get();
+        User user = customRecipe.getAddedByUser();
+        Notification notification = new Notification();
+        notification.setMessage(setApprovedRecipeNotification(customRecipe.getRecipeName()));
+        notificationRepository.saveAndFlush(notification);
+        user.getNotifications().add(notification);
+        userRepository.saveAndFlush(user);
+    }
+
+    private String setApprovedRecipeNotification(String recipeName) {
+        return String.format("Вашата рецепта %s беше одобрена!", recipeName);
+    }
+
     private CustomRecipeFromUsers mapCustomRecipe(CreateCustomRecipeDTO recipeDTO, User user) {
         CustomRecipeFromUsers customRecipe = new CustomRecipeFromUsers();
         customRecipe.setAddedByUser(user);
@@ -168,7 +194,8 @@ public class UserServiceImpl implements UserService {
         user.setFavoriteRecipes(favoriteRecipes);
         List<String> recipesAddedByUser = new ArrayList<>();
         user.setRecipesAddedByUser(recipesAddedByUser);
-        //TODO: Check for customRecipeFromUsers impl
+        List<Notification> notifications = new ArrayList<>();
+        user.setNotifications(notifications);
         return user;
     }
 }

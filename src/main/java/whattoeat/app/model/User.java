@@ -31,6 +31,10 @@ public class User extends BaseEntity{
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<UserRoleEntity> roles;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private List<Notification> notifications;
+
     public User() {
     }
 
@@ -78,5 +82,13 @@ public class User extends BaseEntity{
 
     public void setRecipesAddedByUser(List<String> recipesAddedByUser) {
         this.recipesAddedByUser = recipesAddedByUser;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
     }
 }

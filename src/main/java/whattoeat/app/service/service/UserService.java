@@ -27,4 +27,8 @@ public interface UserService {
     void addCustomRecipeToUser(String title);
 
     List<String> getUsersCustomRecipes(String userEmail);
+
+    List<String> getUserNotifications(String userEmail);
+
+    void sendApprovedNotificationToUser(String title);
 }
