@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CustomRecipeFromUsersRepository extends JpaRepository<CustomRecipeFromUsers, Long> {
     Optional<CustomRecipeFromUsers> findByRecipeName(String recipeName);
+
+    CustomRecipeFromUsers findCustomRecipeFromUsersByRecipeName(String title);
 }

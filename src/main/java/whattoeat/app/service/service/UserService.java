@@ -23,4 +23,6 @@ public interface UserService {
     List<String> getFavoriteRecipes(String userEmail);
 
     void addCustomRecipe(String userEmail, CreateCustomRecipeDTO recipeDTO);
+
+    void addCustomRecipeToUser(String title);
 }

@@ -25,4 +25,7 @@ public interface RecipeService {
 
     List<CreateCustomRecipeDTO> getAllCustomRecipes();
 
+    CreateCustomRecipeDTO findCustomRecipeByTitle(String title);
+
+    void approveCustomRecipe(String title);
 }

@@ -9,6 +9,7 @@ import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
+import whattoeat.app.model.RecipeIngredient;
 import whattoeat.app.repository.CustomRecipeFromUsersRepository;
 import whattoeat.app.repository.IngredientRepository;
 import whattoeat.app.repository.RecipeIngredientsRepository;
@@ -134,6 +135,75 @@ public class RecipeServiceImpl implements RecipeService {
             customRecipeDTOs.add(createCustomRecipeDTO);
         });
         return customRecipeDTOs;
+    }
+
+    @Override
+    public CreateCustomRecipeDTO findCustomRecipeByTitle(String title) {
+        CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
+        return mapCustomRecipeToDTO(customRecipeByName);
+    }
+
+    @Override
+    public void approveCustomRecipe(String title) {
+        CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
+        mapCustomRecipeToRecipeEntityAndFlushIt(customRecipeByName);
+    }
+
+    private void mapCustomRecipeToRecipeEntityAndFlushIt(CustomRecipeFromUsers customRecipeByName) {
+
+        Recipe recipe = new Recipe();
+        recipe.setName(customRecipeByName.getRecipeName());
+        recipe.setPreparationDescription(customRecipeByName.getDescription());
+        recipeRepository.saveAndFlush(recipe);
+        List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+        String[] rowsArr = customRecipeByName.getProductNameAndQuantity().split("\\n");
+        for (int i = 0; i < rowsArr.length; i++) {
+            String productName = rowsArr[i].split(" - ")[0];
+            String quantity = rowsArr[i].split(" -")[1];
+            RecipeIngredient recipeIngredient = new RecipeIngredient();
+
+            if (ingredientRepository.findByName(productName).isPresent()) {
+                Ingredient ingredient = ingredientRepository.findByName(productName).get();
+                recipeIngredient.setIngredient(ingredient);
+                recipeIngredient.setRecipe(recipe);
+                if (!quantity.isEmpty()) {
+                    recipeIngredient.setQuantity(quantity);
+                }
+            } else {
+                Ingredient ingredient = new Ingredient();
+                ingredient.setName(productName);
+                ingredientRepository.saveAndFlush(ingredient);
+                recipeIngredient.setIngredient(ingredient);
+                recipeIngredient.setRecipe(recipe);
+                if (!quantity.isEmpty()) {
+                    recipeIngredient.setQuantity(quantity);
+                }
+            }
+            recipeIngredients.add(recipeIngredient);
+            recipeIngredientsRepository.saveAndFlush(recipeIngredient);
+
+        }
+        Recipe recipe1 = recipeRepository.findByName(customRecipeByName.getRecipeName()).get();
+        recipe1.setIngredients(recipeIngredients);
+        recipeRepository.saveAndFlush(recipe1);
+    }
+
+    private CreateCustomRecipeDTO mapCustomRecipeToDTO(CustomRecipeFromUsers customRecipeByName) {
+        //TODO: Extract in util class
+        CreateCustomRecipeDTO createCustomRecipeDTO = new CreateCustomRecipeDTO(
+                customRecipeByName.getRecipeName(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                customRecipeByName.getDescription()
+        );
+        String[] rowsArr = customRecipeByName.getProductNameAndQuantity().split("\\n");
+        for (int i = 0; i < rowsArr.length; i++) {
+            String productName = rowsArr[i].split(" - ")[0];
+            String quantity = rowsArr[i].split(" -")[1];
+            createCustomRecipeDTO.getProductName().add(productName);
+            createCustomRecipeDTO.getQuantity().add(quantity);
+        }
+        return createCustomRecipeDTO;
     }
 
     private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {

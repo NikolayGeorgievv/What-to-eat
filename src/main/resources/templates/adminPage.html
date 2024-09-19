@@ -19,10 +19,8 @@
   <nav th:replace="~{fragments/nav-bar}"></nav>
 </div>
 
-<div th:replace="~{fragments/search-bar}"></div>
-
 <div class="album py-5">
-  <h2 id="RecipesToApproveAlbumHeader">Рецепти за удобрение</h2>
+  <h2 id="RecipesToApproveAlbumHeader">Рецепти за одобрение</h2>
   <div class="container">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       <div th:each="recipe : ${recipesToApprove}" class="col">

@@ -18,10 +18,7 @@ import whattoeat.app.repository.UserRepository;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static whattoeat.app.constants.Constants.INVALID_RECIPE_NAME;
 
@@ -129,11 +126,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         CustomRecipeFromUsers customRecipe = mapCustomRecipe(recipeDTO, user);
-
-        // TODO: The admin should perform this action when if the recipe is approved
-//        user.getRecipesAddedByUser().add(customRecipe.getRecipeName());
-//        userRepository.saveAndFlush(user);
         recipeService.addCustomRecipe(customRecipe);
+    }
+
+    @Override
+    public void addCustomRecipeToUser(String title) {
+        CustomRecipeFromUsers customRecipe = customRecipeFromUsersRepository.findByRecipeName(title).get();
+        User user = customRecipe.getAddedByUser();
+        user.getRecipesAddedByUser().add(customRecipe.getRecipeName());
+        userRepository.saveAndFlush(user);
+        customRecipeFromUsersRepository.delete(customRecipe);
     }
 
     private CustomRecipeFromUsers mapCustomRecipe(CreateCustomRecipeDTO recipeDTO, User user) {

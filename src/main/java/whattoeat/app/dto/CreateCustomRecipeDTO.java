@@ -57,4 +57,16 @@ public class CreateCustomRecipeDTO {
     public void setPreparationDescription(String preparationDescription) {
         this.preparationDescription = preparationDescription;
     }
+    public String listProductsAndQuantities() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < productName.size(); i++) {
+            sb.append(productName.get(i));
+            if (quantity.get(i).equals(" ")) {
+                sb.append("\n");
+            } else {
+                sb.append(" - ").append(quantity.get(i)).append("\n");
+            }
+        }
+        return sb.toString();
+    }
 }
