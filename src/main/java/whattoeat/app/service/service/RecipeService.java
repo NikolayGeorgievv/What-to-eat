@@ -10,7 +10,6 @@ import whattoeat.app.model.Recipe;
 import java.util.List;
 
 public interface RecipeService {
-    Page<RecipeDTO> getMatches(PageRequest of);
 
     Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest);
 

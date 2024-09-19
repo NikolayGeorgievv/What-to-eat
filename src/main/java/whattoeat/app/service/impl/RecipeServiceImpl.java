@@ -38,13 +38,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
     }
 
-    @Override
-    public Page<RecipeDTO> getMatches(PageRequest of) {
-        recipeRepository.findAll(of);
-
-
-        return null;
-    }
 
     @Override
     public Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest) {

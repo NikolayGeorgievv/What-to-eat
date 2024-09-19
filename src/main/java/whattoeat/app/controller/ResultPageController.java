@@ -32,11 +32,6 @@ public class ResultPageController {
     }
 
 
-    @GetMapping("/results")
-    public Page<RecipeDTO> getResults(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
-        return recipeService.getMatches(PageRequest.of(page, size));
-    }
-
     @GetMapping("/search")
     public String search(@RequestParam String searchType, @RequestParam(required = false) String productName, @RequestParam(required = false) String recipeName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size, Model model) {
         setModelAttributes(model, searchType, productName, recipeName, page, size);
