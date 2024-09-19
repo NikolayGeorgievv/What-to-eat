@@ -25,4 +25,6 @@ public interface UserService {
     void addCustomRecipe(String userEmail, CreateCustomRecipeDTO recipeDTO);
 
     void addCustomRecipeToUser(String title);
+
+    List<String> getUsersCustomRecipes(String userEmail);
 }

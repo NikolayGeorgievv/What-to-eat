@@ -19,8 +19,6 @@
     <nav th:replace="~{fragments/nav-bar}"></nav>
 </div>
 
-<div th:replace="~{fragments/search-bar}"></div>
-
 <div class="album py-5">
     <h2 id="favoriteRecipesAlbumHeader">Любими рецепти</h2>
     <div class="container">
@@ -43,10 +41,32 @@
         </div>
     </div>
 </div>
+<div class="album py-5">
+    <h2 id="customRecipesAlbumHeader">Собствени рецепти</h2>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div th:each="recipe : ${customRecipes}" class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p th:text="${recipe}" class="card-text">Име</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <form action="/recipe" method="get">
+                                    <input type="hidden" name="title" th:value="${recipe}"/>
+                                    <button type="submit" class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold">Виж рецептата</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 <style>
-    #favoriteRecipesAlbumHeader {
+    #favoriteRecipesAlbumHeader, #customRecipesAlbumHeader {
         text-align: center;
         margin-bottom: 20px;
     }

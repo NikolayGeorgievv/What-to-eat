@@ -138,8 +138,13 @@ public class UserServiceImpl implements UserService {
         customRecipeFromUsersRepository.delete(customRecipe);
     }
 
-    private CustomRecipeFromUsers mapCustomRecipe(CreateCustomRecipeDTO recipeDTO, User user) {
+    @Override
+    public List<String> getUsersCustomRecipes(String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return user.getRecipesAddedByUser();
+    }
 
+    private CustomRecipeFromUsers mapCustomRecipe(CreateCustomRecipeDTO recipeDTO, User user) {
         CustomRecipeFromUsers customRecipe = new CustomRecipeFromUsers();
         customRecipe.setAddedByUser(user);
         customRecipe.setRecipeName(recipeDTO.getRecipeName());

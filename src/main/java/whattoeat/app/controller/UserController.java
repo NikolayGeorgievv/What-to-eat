@@ -64,6 +64,13 @@ public class UserController {
 
         return userService.getFavoriteRecipes(userEmail);
     }
+    @ModelAttribute("customRecipes")
+    public List<String> getCustomRecipes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        return userService.getUsersCustomRecipes(userEmail);
+    }
     @ModelAttribute("customRecipeDTO")
     public CreateCustomRecipeDTO getRecipeDTO() {
         return new CreateCustomRecipeDTO();
