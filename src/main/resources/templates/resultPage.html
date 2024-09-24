@@ -9,7 +9,6 @@
     <script src="https://kit.fontawesome.com/1a33788db9.js" crossorigin="anonymous"></script>
 
     <script th:src="@{/js/addAndRemoveFromFavorite.js}"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
@@ -18,7 +17,7 @@
     <title>Result page</title>
 </head>
 <body>
-<div th:replace="~{fragments/nav-bar}"></div>
+<div th:replace="~{fragments/navBar}"></div>
 
 
 <div th:replace="~{fragments/search-bar}"></div>
@@ -38,39 +37,7 @@
     <div id="results" class="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-3" >
         <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3" th:attr="data-recipe-id=${recipe.id}">
             <div class="d-flex justify-content-around">
-                <h3 th:text="${recipe.name}">Recipe Name</h3>
-                <div sec:authorize="isAuthenticated()">
-                    <div th:if="${favoritesMap[recipe.id] != true}">
-                        <form id="addToFavoriteForm"  th:action="@{/addToFavorite}" method="post">
-                            <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
-                            <input type="hidden" name="searchType" th:value="${searchType}"/>
-                            <input type="hidden" name="productName" th:value="${productName}"/>
-                            <input type="hidden" name="recipeName" th:value="${recipeName}"/>
-                            <input type="hidden" name="page" th:value="${page.number}"/>
-                            <input type="hidden" name="size" th:value="${page.size}"/>
-                            <button type="submit" value="Добави в любими" id="addToFavoriteBtn"><i
-                                    class="fa-regular fa-heart"></i></button>
-                        </form>
-                    </div>
-
-                    <div th:if="${favoritesMap[recipe.id] == true}">
-                        <form id="removeFromFavoriteForm" th:action="@{/removeFromFavorite}" method="post">
-                            <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
-                            <input type="hidden" name="searchType" th:value="${searchType}"/>
-                            <input type="hidden" name="productName" th:value="${productName}"/>
-                            <input type="hidden" name="recipeName" th:value="${recipeName}"/>
-                            <input type="hidden" name="page" th:value="${page.number}"/>
-                            <input type="hidden" name="size" th:value="${page.size}"/>
-                            <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn"><i
-                                    class="fa-solid fa-heart"></i></button>
-                        </form>
-                    </div>
-
-                </div>
-                <!--                <div>-->
-                <!--                    <button value="Харесвам!"><i class="fa-regular fa-thumbs-up"></i></button>-->
-                <!--                    <button value="Харесано!"><i class="fa-solid fa-thumbs-up"></i></button>-->
-                <!--                </div>-->
+                <div th:replace="~{fragments/recipeHeaderFunctionality}"></div>
             </div>
             <h5>Необходими продукти:</h5>
             <div th:each="ingredient : ${recipe.getIngredients()}">
@@ -84,6 +51,7 @@
 
 
 <script>
+
     function toggleContent(button) {
         const fullContent = button.nextElementSibling;
         if (fullContent.classList.contains('d-none')) {
@@ -115,6 +83,7 @@
         this.classList.add('btn-selected');
         document.getElementById('productSearchBtn').classList.remove('btn-selected');
     });
+
 </script>
 </body>
 
@@ -145,6 +114,33 @@
 
     #recipeContainer {
         max-width: 100%;
+    }
+    .hide {
+        display: none!important;
+    }
+
+    .search-section {
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .btn{
+        color: black;
+    }
+
+    .searchButton{
+        margin-top: 20px;
+        margin-right: 100%;
+        margin-left: 67%!important;
+    }
+
+    .btn-selected {
+        background-color: #ffc107;
+        color: black;
+    }
+    .form-control{
+        border: 1px solid lightgrey;
+        width: 74.5%;
+        background: #f8f3ef;
     }
 </style>
 </html>
