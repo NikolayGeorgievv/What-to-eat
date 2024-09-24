@@ -12,6 +12,7 @@ import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -122,5 +123,12 @@ public class ResultPageController {
         model.addAttribute("recipeName", recipeName);
         model.addAttribute("page", page);
         model.addAttribute("size", size);
+    }
+    @ModelAttribute("userNotifications")
+    public List<String> getUserNotifications() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        return userService.getUserNotifications(userEmail);
     }
 }
