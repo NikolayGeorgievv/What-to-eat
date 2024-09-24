@@ -112,7 +112,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> getFavoriteRecipes(String userEmail) {
-        //TODO: Check if user is logged in
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return user.getFavoriteRecipes();
     }
