@@ -89,32 +89,15 @@
         this.classList.add('btn-selected');
         document.getElementById('productSearchBtn').classList.remove('btn-selected');
     });
-
-
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     let loadingScreen = document.getElementById('loading-screen');
-    //
-    //     // Show loading screen when navigating away from the page
-    //     window.addEventListener('beforeunload', function () {
-    //         loadingScreen.style.visibility = 'visible';
-    //     });
-    //
-    //     // Set the loader to be visible for a minimum of 5 seconds, then hide
-    //     loadingScreen.style.visibility = 'visible'; // Show the loading screen immediately
-    //     setTimeout(function () {
-    //         loadingScreen.style.visibility = 'hidden'; // Hide the loader after 5 seconds
-    //     }, 500); // 5000 ms = 5 seconds
-    // });
     window.onload = function () {
         let loadingScreen = document.getElementById('loading-screen');
 
-        // Keep the loading screen visible for 1.5 seconds
         setTimeout(function () {
-            loadingScreen.style.opacity = '0'; // Start fading out the loading screen
+            loadingScreen.style.opacity = '0';
             setTimeout(function() {
-                loadingScreen.style.visibility = 'hidden'; // Hide the loader after fade-out
-            }, 300); // Duration of fade-out transition
-        }, 1500); // Show loading screen for 1.5 seconds
+                loadingScreen.style.visibility = 'hidden';
+            }, 300);
+        }, 1500);
     };
 </script>
 </body>
