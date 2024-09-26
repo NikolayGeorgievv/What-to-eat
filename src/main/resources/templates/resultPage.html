@@ -22,6 +22,12 @@
 
 <div th:replace="~{fragments/search-bar}"></div>
 
+<div id="loading-screen" class="loading-screen">
+    <img src="/images/gif1.gif" alt="Loading..." width="100px" height="100px">
+    <p>Your recipe is being prepared...</p>
+</div>
+
+
 <div class="container my-1 d-flex flex-column align-items-center" id="recipeContainer">
     <nav>
         <ul class="pagination justify-content-center">
@@ -84,6 +90,32 @@
         document.getElementById('productSearchBtn').classList.remove('btn-selected');
     });
 
+
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     let loadingScreen = document.getElementById('loading-screen');
+    //
+    //     // Show loading screen when navigating away from the page
+    //     window.addEventListener('beforeunload', function () {
+    //         loadingScreen.style.visibility = 'visible';
+    //     });
+    //
+    //     // Set the loader to be visible for a minimum of 5 seconds, then hide
+    //     loadingScreen.style.visibility = 'visible'; // Show the loading screen immediately
+    //     setTimeout(function () {
+    //         loadingScreen.style.visibility = 'hidden'; // Hide the loader after 5 seconds
+    //     }, 500); // 5000 ms = 5 seconds
+    // });
+    window.onload = function () {
+        let loadingScreen = document.getElementById('loading-screen');
+
+        // Keep the loading screen visible for 1.5 seconds
+        setTimeout(function () {
+            loadingScreen.style.opacity = '0'; // Start fading out the loading screen
+            setTimeout(function() {
+                loadingScreen.style.visibility = 'hidden'; // Hide the loader after fade-out
+            }, 300); // Duration of fade-out transition
+        }, 1500); // Show loading screen for 1.5 seconds
+    };
 </script>
 </body>
 
@@ -142,5 +174,37 @@
         width: 74.5%;
         background: #f8f3ef;
     }
+
+
+
+    /*==========*/
+    #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: visible; /* Ensure it starts as visible */
+        opacity: 1; /* Fully visible */
+        /*transition: opacity 0.3s ease-in-out; !* Smooth fade-out effect *!*/
+    }
+
+
+
+    .loading-screen img {
+        width: 150px; /* Adjust size as needed */
+    }
+
+    .loading-screen p {
+        font-size: 18px;
+        color: #333;
+        margin-top: 10px;
+    }
+
 </style>
 </html>
