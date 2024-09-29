@@ -4,10 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll("form[id^='addToFavoriteForm'], form[id^='removeFromFavoriteForm']");
 
         forms.forEach(function(form) {
-            // Remove existing event listener in order to avoid multiple event triggers
-            form.removeEventListener('submit', handleFormSubmit);
-            // Attach new event listener
-            form.addEventListener('submit', handleFormSubmit);
+            // Check if the event listener is already attached
+            if (!form.hasAttribute('data-listener-attached')) {
+                // Attach new event listener
+                form.addEventListener('submit', handleFormSubmit);
+                // Mark the form as having the event listener attached
+                form.setAttribute('data-listener-attached', 'true');
+            }
         });
     }
 
