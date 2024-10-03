@@ -41,29 +41,35 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('[data-recipe-id]').forEach(function(element) {
             const recipeId = element.getAttribute('data-recipe-id');
             const isFavorite = favoritesMap[recipeId];
-            const heartIcon = element.querySelector('i');
+            const heartIcon = element.querySelector('.heart-icon');
 
             if (isFavorite) {
-                heartIcon.classList.remove('fa-regular');
-                heartIcon.classList.add('fa-solid');
+                heartIcon.src = '/images/filledHearth.png';
+                heartIcon.alt = 'Remove from Favorites';
                 const addToFavoriteForm = element.querySelector('form[id^="addToFavoriteForm"]');
                 if (addToFavoriteForm) {
                     addToFavoriteForm.outerHTML = `
                         <form id="removeFromFavoriteForm" action="/removeFromFavorite" method="post">
                             <input type="hidden" name="recipeId" value="${recipeId}"/>
-                            <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn"><i class="fa-solid fa-heart"></i></button>
+                            <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn"><img class="heart-icon"
+                                                                                          src="/images/filledHearth.png"
+                                                                                          height="20px" width="20px"
+                                                                                          alt="Filled hearth"></button>
                         </form>
                     `;
                 }
             } else {
-                heartIcon.classList.remove('fa-solid');
-                heartIcon.classList.add('fa-regular');
+                heartIcon.src = '/images/emptyHearth.png';
+                heartIcon.alt = 'Add to Favorites';
                 const removeFromFavoriteForm = element.querySelector('form[id^="removeFromFavoriteForm"]');
                 if (removeFromFavoriteForm) {
                     removeFromFavoriteForm.outerHTML = `
                         <form id="addToFavoriteForm" action="/addToFavorite" method="post">
                             <input type="hidden" name="recipeId" value="${recipeId}"/>
-                            <button type="submit" value="Добави в любими" id="addToFavoriteBtn"><i class="fa-regular fa-heart"></i></button>
+                             <button type="submit" value="Добави в любими" id="addToFavoriteBtn"><img class="heart-icon"
+                                                                                     src="/images/emptyHearth.png"
+                                                                                     height="20px" width="20px"
+                                                                                     alt="Empty hearth"></button>
                         </form>
                     `;
                 }
