@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -19,15 +19,46 @@
 <div th:replace="~{fragments/search-bar}"></div>
 
 <div id="results" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    <div id="recipeResult">
-        <h3 th:text="${recipe.name}">Recipe Name</h3>
+    <div id="recipeResult" data-recipe-id="${recipe.id}">
+        <div class="d-flex justify-content-around">
+            <h3 th:text="${recipe.name}">Recipe Name</h3>
+            <div sec:authorize="isAuthenticated()">
+                <div th:if="${favoritesMap[recipe.id] != true}">
+                    <form id="addToFavoriteForm" th:action="@{/addToFavorite}" method="post">
+                        <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
+                        <input type="hidden" name="searchType" th:value="${searchType}"/>
+                        <input type="hidden" name="productName" th:value="${productName}"/>
+                        <input type="hidden" name="recipeName" th:value="${recipeName}"/>
+                        <input type="hidden" name="page" th:value="${page != null ? page.number : 0}"/>
+                        <input type="hidden" name="size" th:value="${page != null ? page.size : 1}"/>
+                        <button type="submit" value="Добави в любими" id="addToFavoriteBtn">
+                            <img class="heart-icon" src="/images/emptyHearth.png" height="20px" width="20px"
+                                 alt="Empty hearth">
+                        </button>
+                    </form>
+                </div>
+
+                <div th:if="${favoritesMap[recipe.id] == true}">
+                    <form id="removeFromFavoriteForm" th:action="@{/removeFromFavorite}" method="post">
+                        <input type="hidden" name="recipeId" th:value="${recipe.id}"/>
+                        <input type="hidden" name="searchType" th:value="${searchType}"/>
+                        <input type="hidden" name="productName" th:value="${productName}"/>
+                        <input type="hidden" name="recipeName" th:value="${recipeName}"/>
+                        <input type="hidden" name="page" th:value="${page != null ? page.number : 0}"/>
+                        <input type="hidden" name="size" th:value="${page != null ? page.size : 1}"/>
+                        <button type="submit" value="Махни от любими" id="removeFromFavoriteBtn">
+                            <img class="heart-icon" src="/images/filledHearth.png" height="20px" width="20px"
+                                 alt="Filled hearth">
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
         <h5>Необходими продукти:</h5>
         <div th:each="ingredient : ${recipe.getIngredients()}">
             <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>
         </div>
-        <!--            <p th:text="${recipe.preparationDescription}">Preparation Description</p>-->
-<!--        <p th:text="${#strings.abbreviate(recipe.preparationDescription, 100)}">Preparation Description</p>-->
-        <button class="btn btn-link button" onclick="toggleContent(this)">Цъкни за цялата рецепта</button>
+        <a type="button" id="toggleBtn" onclick="toggleContent(this)">Цъкни за цялата рецепта</a>
         <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>
     </div>
 </div>
@@ -44,12 +75,73 @@
             button.textContent = 'Show more';
         }
     }
+
+    //     ==========================
+    document.addEventListener('DOMContentLoaded', function () {
+
+        function attachEventListeners() {
+            const forms = document.querySelectorAll("form[id^='addToFavoriteForm'], form[id^='removeFromFavoriteForm']");
+
+            forms.forEach(function (form) {
+                if (!form.hasAttribute('data-listener-attached')) {
+                    form.addEventListener('submit', handleFormSubmit);
+                    form.setAttribute('data-listener-attached', 'true');
+                }
+            });
+        }
+
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('An error occurred, please try again later.');
+                }
+                return response.json();
+            }).then(data => {
+                if (data.success) {
+                    updateFavoritesMap(data.favoritesMap);
+                } else {
+                    console.error('Error: Response indicates failure', data);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred, please try again later.');
+            });
+        }
+
+
+        function updateFavoritesMap(favoritesMap) {
+            document.querySelectorAll('[data-recipe-id]').forEach(function (element) {
+                const recipeId = element.getAttribute('data-recipe-id');
+                const isFavorite = favoritesMap[recipeId];
+                const heartIcon = element.querySelector('.heart-icon');
+
+                if (isFavorite) {
+                    heartIcon.src = '/images/filledHearth.png';
+                    heartIcon.alt = 'Remove from Favorites';
+                } else {
+                    heartIcon.src = '/images/emptyHearth.png';
+                    heartIcon.alt = 'Add to Favorites';
+                }
+            });
+            attachEventListeners();
+            window.location.reload();
+        }
+
+        attachEventListeners();
+    });
 </script>
 
 
 </body>
 <style>
-     #recipeResult {
+    #recipeResult {
         text-align: center;
         border: 1px solid #ffc107;
         margin: 10px;
@@ -58,7 +150,9 @@
 
     #results {
         margin-left: 33%;
+        pointer-events: auto;
     }
+
 
     .d-none {
         opacity: 0;
@@ -68,8 +162,10 @@
     .btn {
         color: black;
     }
-    .button{
+
+    #toggleBtn {
         color: brown;
+        text-decoration: underline;
     }
 </style>
 </html>
