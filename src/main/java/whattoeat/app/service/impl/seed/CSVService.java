@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import whattoeat.app.model.CustomRecipeFromUsers;
 import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
 import whattoeat.app.model.RecipeIngredient;
@@ -11,12 +12,16 @@ import whattoeat.app.repository.IngredientRepository;
 import whattoeat.app.repository.RecipeIngredientsRepository;
 import whattoeat.app.repository.RecipeRepository;
 
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class CSVService {
@@ -24,9 +29,11 @@ public class CSVService {
     private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeIngredientsRepository recipeIngredientsRepository;
-
+    private static final Logger logger = Logger.getLogger(CSVService.class.getName());
     @Value("${file1Path}")
-    private String file1Path;
+    private String fileForReading;
+    @Value("${file2Path}")
+    private String fileForWriting;
 
     public CSVService(IngredientRepository ingredientRepository, RecipeRepository recipeRepository, RecipeIngredientsRepository recipeIngredientsRepository) {
         this.ingredientRepository = ingredientRepository;
@@ -35,7 +42,7 @@ public class CSVService {
     }
 
     public void readCsvAndInsertData() {
-        String filePath = file1Path;
+        String filePath = fileForReading;
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
             List<String[]> records = reader.readAll();
 
@@ -55,7 +62,7 @@ public class CSVService {
 
                 List<String> ingredientsArr = Arrays.stream(currentRecord[0].split("\\n")).toList();
 
-                ingredientsArr.forEach(ingredient ->{
+                ingredientsArr.forEach(ingredient -> {
                     Ingredient ingredientEntity = new Ingredient();
                     RecipeIngredient recipeIngredientEntity = new RecipeIngredient();
 
@@ -63,7 +70,7 @@ public class CSVService {
                     Optional<Ingredient> ingredientOpt = ingredientRepository.findByName(ingredient.split(" - ")[0]);
                     if (ingredientOpt.isPresent()) {
                         ingredientEntity = ingredientOpt.get();
-                    }else {
+                    } else {
                         String ingredientName = ingredient.split(" - ")[0];
                         ingredientEntity.setName(ingredientName);
                     }
@@ -77,7 +84,7 @@ public class CSVService {
                         recipeIngredientEntity.setRecipe(recipe);
                         recipeIngredientsRepository.saveAndFlush(recipeIngredientEntity);
 
-                    }else {
+                    } else {
                         //has quantity
                         String quantity = ingredient.split(" - ")[1];
                         recipeIngredientEntity.setIngredient(ingredientEntity);
@@ -102,4 +109,20 @@ public class CSVService {
             e.printStackTrace();
         }
     }
+
+    public void writeCustomRecipe(CustomRecipeFromUsers customRecipe) {
+        String filePath = fileForWriting;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            String data = customRecipe.getAddedByUser().getEmail() + "," +
+                    customRecipe.getRecipeName() + "," +
+                    customRecipe.getProductNameAndQuantity().replace("\n", ",")+
+                    customRecipe.getDescription();
+            writer.write(data);
+            writer.newLine();
+            writer.flush();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to write to file", e);
+        }
+    }
 }
+

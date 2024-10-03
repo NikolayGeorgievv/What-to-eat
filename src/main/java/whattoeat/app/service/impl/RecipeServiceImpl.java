@@ -14,6 +14,7 @@ import whattoeat.app.repository.CustomRecipeFromUsersRepository;
 import whattoeat.app.repository.IngredientRepository;
 import whattoeat.app.repository.RecipeIngredientsRepository;
 import whattoeat.app.repository.RecipeRepository;
+import whattoeat.app.service.impl.seed.CSVService;
 import whattoeat.app.service.service.RecipeService;
 
 import java.util.ArrayList;
@@ -32,12 +33,14 @@ public class RecipeServiceImpl implements RecipeService {
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientsRepository recipeIngredientsRepository;
     private final CustomRecipeFromUsersRepository customRecipeFromUsersRepository;
+    private final CSVService csvService;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, RecipeIngredientsRepository recipeIngredientsRepository, CustomRecipeFromUsersRepository customRecipeFromUsersRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, RecipeIngredientsRepository recipeIngredientsRepository, CustomRecipeFromUsersRepository customRecipeFromUsersRepository, CSVService csvService) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.recipeIngredientsRepository = recipeIngredientsRepository;
         this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
+        this.csvService = csvService;
     }
 
 
@@ -103,6 +106,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipeRepository.findByName(customRecipe.getRecipeName()).isPresent()) {
             throw new IllegalArgumentException(INVALID_RECIPE_NAME);
         }
+
         customRecipeFromUsersRepository.saveAndFlush(customRecipe);
     }
 
@@ -141,6 +145,8 @@ public class RecipeServiceImpl implements RecipeService {
     public void approveCustomRecipe(String title) {
         CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
         mapCustomRecipeToRecipeEntityAndFlushIt(customRecipeByName,recipeRepository, ingredientRepository, recipeIngredientsRepository);
+        csvService.writeCustomRecipe(customRecipeByName);
+
     }
 
     @Override

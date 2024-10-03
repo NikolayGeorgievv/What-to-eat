@@ -49,7 +49,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         try {
-            //TODO: Add the recipe in file
             userService.addCustomRecipe(userEmail, recipeDTO);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("recipeNameNotUnique", e.getMessage()));
