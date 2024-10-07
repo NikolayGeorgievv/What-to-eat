@@ -3,7 +3,7 @@ package whattoeat.app.service.impl.seed;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class CML implements CommandLineRunner {
 
     private final CSVService csvService;
