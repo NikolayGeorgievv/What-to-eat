@@ -55,12 +55,12 @@
 
             <div sec:authorize="isAnonymous()" class="col-md-2 text-end d-flex">
                 <a th:href="@{/users/login}">
-                    <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold"
+                    <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover"
                             style="width: 110px">Вход
                     </button>
                 </a>
                 <a th:href="@{/users/register}">
-                    <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold"
+                    <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover"
                             style="width: fit-content">Регистрация
                     </button>
                 </a>
@@ -70,7 +70,7 @@
 
                 <form th:method="post"
                       th:action="@{/logout}">
-                    <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold" value="Logout"
+                    <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover" value="Logout"
                     >Изход
                     </button>
 

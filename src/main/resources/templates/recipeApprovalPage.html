@@ -30,11 +30,11 @@
         <div class="d-flex justify-content-around">
             <form th:action="@{/approveRecipe}" th:method="post">
                 <input type="hidden" th:value="${recipe.recipeName}" name="recipeName">
-                <button class="btn btn-link button">Одобри</button>
+                <button class="btn btn-link button btnHover">Одобри</button>
             </form>
             <form th:action="@{/rejectRecipe}" th:method="post">
                 <input type="hidden" th:value="${recipe.recipeName}" name="recipeName">
-                <button class="btn btn-link button">Откажи</button>
+                <button class="btn btn-link button btnHover">Откажи</button>
 
             </form>
         </div>

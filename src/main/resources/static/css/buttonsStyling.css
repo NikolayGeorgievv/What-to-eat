@@ -4,7 +4,7 @@
     transition: transform 0.2s ease;
 }
 
-.btn:hover {
+.btnHover:hover {
     background-image: url("/images/btnBG3.png");
 }
 
@@ -23,6 +23,7 @@
 .btn:active {
     transform: scale(0.96);
 }
+
 
 .btn::before, .btn::after {
     content: "";
