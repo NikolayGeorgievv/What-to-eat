@@ -98,13 +98,11 @@
         </div>
     </div>
     <div class="container  px-4 py-5" id="recipeInfoContainer">
-        <h5>Преди да попълните формата, прочетете нашите препоръки!</h5>
+        <h5 id="instructionsHeader">Преди да попълните формата, прочетете нашите препоръки!</h5>
         <h6><a type="button" id="toggleBtn" onclick="toggleContent(this)"> Цъкни тук! </a></h6>
         <div class="full-content d-none" id="divInstructions">
-            <p>
-                divdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivdivvv
-            </p>
-
+            <img src="images/instructionCard.png" alt="instruction card" id="instructionCard">
+            <h6><a type="button" id="hideImg" onclick="toggleContent(this)"> Скрий инструкциите! </a></h6>
         </div>
     </div>
 
@@ -113,12 +111,17 @@
 
     function toggleContent(button) {
         const fullContent = document.getElementById("divInstructions");
+        const instructionsHeader = document.getElementById("instructionsHeader");
+        const toggleBtn = document.getElementById("toggleBtn");
         if (fullContent.classList.contains('d-none')) {
             fullContent.classList.remove('d-none');
             button.style.display = 'none';
+            instructionsHeader.style.display = 'none';
         } else {
+            instructionsHeader.style.display = 'block';
             fullContent.classList.add('d-none');
             button.textContent = 'Show more';
+            toggleBtn.style.display = 'block';
         }
     }
 
@@ -199,6 +202,11 @@
 <style>
     #addRecipeFormContainer {
         margin-left: 200px;
+    }
+
+    #instructionCard{
+        margin-left: -250px;
+        margin-top: -66px;
     }
 
     #recipeInfoContainer {
