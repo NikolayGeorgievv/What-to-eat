@@ -8,14 +8,14 @@
 <body>
 
 <div class="container my-5" id="searchBar">
-    <div class="d-flex justify-content-center mb-4">
-        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2">Търси по
+    <div class="d-flex justify-content-center mb-4" style="position: relative">
+        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">Търси по
             продукти
         </button>
-        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Търси по рецепта
+        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold btnHover">Търси по рецепта
         </button>
     </div>
-    <form id="searchForm" action="/search" method="get">
+    <form id="searchForm" action="/search" method="get" >
         <input type="hidden" id="searchType" name="searchType" value="product">
         <div id="productSearch" class="search-section">
             <h2>Търси по продукти</h2>
@@ -25,7 +25,9 @@
             <h2>Търси по рецепта</h2>
             <input type="text" class="form-control btnLike" name="recipeName" placeholder="Въведи име на рецепта">
         </div>
-        <button type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton">Търси</button>
+        <div style="position: relative">
+        <button type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton btnHover">Търси</button>
+        </div>
     </form>
 </div>
 

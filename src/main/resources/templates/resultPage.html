@@ -48,7 +48,7 @@
             <div th:each="ingredient : ${recipe.getIngredients()}">
                 <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>
             </div>
-            <button class="btn btn-link" onclick="toggleContent(this)">Цъкни за рецепта</button>
+            <button class="btn-link" onclick="toggleContent(this)">Цъкни за рецепта</button>
             <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>
         </div>
     </div>
@@ -108,7 +108,9 @@
     }
 
     .btn-link, .page-button {
-        color: brown;
+        color: brown!important;
+        border: none;
+        background: transparent;
     }
 
     #results {
@@ -140,17 +142,12 @@
     .btn{
         color: black;
     }
-
     .searchButton{
         margin-top: 20px;
         margin-right: 100%;
         margin-left: 67%!important;
     }
 
-    .btn-selected {
-        background-color: #ffc107;
-        color: black;
-    }
     .form-control{
         border: 1px solid lightgrey;
         width: 74.5%;
