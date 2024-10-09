@@ -89,16 +89,30 @@
         this.classList.add('btn-selected');
         document.getElementById('productSearchBtn').classList.remove('btn-selected');
     });
-    window.onload = function () {
-        let loadingScreen = document.getElementById('loading-screen');
 
-        setTimeout(function () {
-            loadingScreen.style.opacity = '0';
-            setTimeout(function() {
-                loadingScreen.style.visibility = 'hidden';
-            }, 300);
-        }, 1500);
-    };
+    let minLoadingTimeReached = false;
+    const MIN_LOADING_TIME = 1500;
+
+
+    document.getElementById('loading-screen').style.display = 'block';
+
+    // Set a timer to track the minimum display time for the loading screen
+    setTimeout(function() {
+        minLoadingTimeReached = true;
+        hideLoadingScreenIfReady();
+    }, MIN_LOADING_TIME);
+
+
+    window.addEventListener('load', function() {
+        hideLoadingScreenIfReady();
+    });
+
+    function hideLoadingScreenIfReady() {
+        // Check if both conditions are met: page is loaded and minimum time has passed
+        if (minLoadingTimeReached) {
+            document.getElementById('loading-screen').style.display = 'none';
+        }
+    }
 </script>
 </body>
 
@@ -178,12 +192,27 @@
         visibility: visible;
         opacity: 1;
 
+        /*margin-top: 300px;*/
     }
 
-
+    #loading-screen {
+        display: none;
+    }
 
     .loading-screen img {
+        position: fixed;
+        display: flex;
+        top: 50%;
+        left: 44%;
         width: 150px;
+        height: 100px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        text-align: center;
+        font-size: 2em;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
     }
 
     .loading-screen p {
