@@ -10,12 +10,14 @@ public class RecipeDTO {
     private String name;
     private String preparationDescription;
     private List<RecipeIngredient> ingredients;
+    private Integer likedCounter;
 
-    public RecipeDTO(Long id, String name, String preparationDescription, List<RecipeIngredient> ingredients) {
+    public RecipeDTO(Long id, String name, String preparationDescription, List<RecipeIngredient> ingredients, Integer likedCounter) {
         this.id = id;
         this.name = name;
         this.preparationDescription = preparationDescription;
         this.ingredients = ingredients;
+        this.likedCounter = likedCounter;
     }
 
     public Long getId() {
@@ -48,6 +50,14 @@ public class RecipeDTO {
 
     public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Integer getLikedCounter() {
+        return likedCounter;
+    }
+
+    public void setLikedCounter(Integer likedCounter) {
+        this.likedCounter = likedCounter;
     }
 
     public String getIngredientsQuantity() {

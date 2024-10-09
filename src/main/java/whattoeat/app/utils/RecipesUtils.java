@@ -40,7 +40,7 @@ public class RecipesUtils {
     public static List<RecipeDTO> mapRecipes(List<Recipe> allByIngredients) {
         List<RecipeDTO> recipeDTOs = new ArrayList<>();
         allByIngredients.forEach(recipe -> {
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients());
+            RecipeDTO recipeDTO = new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getPreparationDescription(), recipe.getIngredients(), recipe.getLikedCounter());
             recipeDTOs.add(recipeDTO);
         });
         return recipeDTOs;

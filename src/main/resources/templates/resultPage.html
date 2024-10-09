@@ -40,7 +40,8 @@
         </ul>
     </nav>
     <div id="results" class="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-3" >
-        <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3" th:attr="data-recipe-id=${recipe.id}">
+        <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3  d-flex flex-column" th:attr="data-recipe-id=${recipe.id}">
+            <h6 id="likedCounterInfo" th:text="'В любими на ' + ${recipe.getLikedCounter()} + ' потребителя'"></h6>
             <div class="d-flex justify-content-around">
                 <div th:replace="~{fragments/recipeHeaderFunctionality}"></div>
             </div>
@@ -105,6 +106,12 @@
     .d-none {
         opacity: 0;
         pointer-events: none;
+    }
+
+    #likedCounterInfo{
+        text-align: end;
+        color: brown;
+        margin-bottom: 5px;
     }
 
     .btn-link, .page-button {

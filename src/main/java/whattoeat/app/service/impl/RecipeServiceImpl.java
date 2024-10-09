@@ -80,7 +80,8 @@ public class RecipeServiceImpl implements RecipeService {
                 recipeByName.getId(),
                 recipeByName.getName(),
                 recipeByName.getPreparationDescription(),
-                recipeByName.getIngredients()
+                recipeByName.getIngredients(),
+                recipeByName.getLikedCounter()
         );
     }
 

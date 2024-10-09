@@ -55,5 +55,8 @@ public class Recipe extends BaseEntity {
 
     public void setLikedCounter(int likedCounter) {
         this.likedCounter = likedCounter;
+        if (this.likedCounter < 0) {
+            this.likedCounter = 0;
+        }
     }
 }
