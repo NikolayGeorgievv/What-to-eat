@@ -1,0 +1,26 @@
+.btn {
+    color: black;
+}
+
+#logoutBtn {
+    width: auto;
+}
+
+#notificationContainer {
+    width: 350px;
+    background: aliceblue;
+}
+
+.notificationItem {
+    height: 60px;
+}
+
+.border {
+    border-top: 1px gray solid;
+}
+.hide {
+    display: none!important;
+}
+#notificationText{
+    font-size: 14px;
+}

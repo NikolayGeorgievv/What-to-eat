@@ -1,0 +1,50 @@
+#addRecipeFormContainer {
+    margin-left: 200px;
+}
+
+#instructionCard{
+    margin-left: -250px;
+    margin-top: -66px;
+}
+
+#recipeInfoContainer {
+    margin-right: 200px;
+    margin-top: 50px;
+}
+
+.inputFieldHolder {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+#buttonsHolderDiv{
+    width: 500px;
+}
+
+.inputField {
+    width: 230px;
+}
+
+#recipeName {
+    width: 465px;
+}
+
+textarea {
+    width: 465px;
+}
+
+#addRowButton {
+    margin-top: 10px;
+    width: 200px;
+
+}
+
+#uploadRecipeButton {
+    margin-top: 10px;
+    width: 262px;
+}
+
+.errors, h6 {
+    color: brown;
+}
