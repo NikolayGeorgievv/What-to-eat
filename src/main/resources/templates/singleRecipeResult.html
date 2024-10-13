@@ -19,8 +19,9 @@
 <div th:replace="~{fragments/search-bar}"></div>
 
 <div id="results" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    <div id="recipeResult" data-recipe-id="${recipe.id}">
-        <div class="d-flex justify-content-around">
+    <div id="recipeResult" data-recipe-id="${recipe.id}" class="d-flex flex-column">
+    <h6 id="likedCounterInfo" th:text="'В любими на ' + ${recipe.getLikedCounter()} + ' потребителя'"></h6>
+        <div class="d-flex justify-content-between">
             <h3 th:text="${recipe.name}">Recipe Name</h3>
             <div sec:authorize="isAuthenticated()">
                 <div th:if="${favoritesMap[recipe.id] != true}">
@@ -148,6 +149,12 @@
         border-radius: 10px;
     }
 
+    #likedCounterInfo{
+        text-align: end;
+        color: brown;
+        margin-bottom: 5px;
+    }
+
     #results {
         margin-left: 33%;
         pointer-events: auto;
@@ -166,6 +173,10 @@
     #toggleBtn {
         color: brown;
         text-decoration: underline;
+    }
+    #addToFavoriteBtn, #removeFromFavoriteBtn {
+        border: #ffc107 1px solid;
+        border-radius: 20%;
     }
 </style>
 </html>

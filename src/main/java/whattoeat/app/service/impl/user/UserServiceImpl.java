@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.dto.RegisterUserDTO;
 import whattoeat.app.model.*;
-import whattoeat.app.repository.CustomRecipeFromUsersRepository;
-import whattoeat.app.repository.NotificationRepository;
-import whattoeat.app.repository.RolesRepository;
-import whattoeat.app.repository.UserRepository;
+import whattoeat.app.repository.*;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
@@ -30,8 +27,9 @@ public class UserServiceImpl implements UserService {
     private final RecipeService recipeService;
     private final CustomRecipeFromUsersRepository customRecipeFromUsersRepository;
     private final NotificationRepository notificationRepository;
+    private final RecipeRepository recipeRepository;
 
-    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService, CustomRecipeFromUsersRepository customRecipeFromUsersRepository, NotificationRepository notificationRepository) {
+    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, RecipeService recipeService, CustomRecipeFromUsersRepository customRecipeFromUsersRepository, NotificationRepository notificationRepository, RecipeRepository recipeRepository) {
         this.userDetail = userDetail;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
@@ -39,6 +37,7 @@ public class UserServiceImpl implements UserService {
         this.recipeService = recipeService;
         this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
         this.notificationRepository = notificationRepository;
+        this.recipeRepository = recipeRepository;
     }
 
 
@@ -88,6 +87,8 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Recipe is already in favorites");
         }
         user.getFavoriteRecipes().add(recipeById.getName());
+        recipeById.setLikedCounter(recipeById.getLikedCounter() + 1);
+        recipeRepository.saveAndFlush(recipeById);
         userRepository.saveAndFlush(user);
     }
 
@@ -96,6 +97,8 @@ public class UserServiceImpl implements UserService {
         Recipe recipeById = recipeService.findById(recipeId);
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.getFavoriteRecipes().remove(recipeById.getName());
+        recipeById.setLikedCounter(recipeById.getLikedCounter() - 1);
+        recipeRepository.saveAndFlush(recipeById);
         userRepository.saveAndFlush(user);
     }
 

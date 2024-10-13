@@ -31,4 +31,5 @@ public interface UserService {
     List<String> getUserNotifications(String userEmail);
 
     void sendApprovedNotificationToUser(String title);
+
 }

@@ -83,6 +83,7 @@ public class ResultPageController {
         response.put("favoritesMap", getFavorites());
         return response;
     }
+
     @PostMapping("/removeFromFavorite")
     @ResponseBody
     public Map<String, Object> removeFromFavorite(@RequestParam Long recipeId, Authentication authentication) {
