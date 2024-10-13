@@ -6,6 +6,7 @@
 
 .btnHover:hover {
     background-image: url("/images/btnBG3.png");
+    cursor: url('/images/fork1.png'), auto;
 }
 
 .searchButton {
