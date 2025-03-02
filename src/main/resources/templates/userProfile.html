@@ -24,20 +24,20 @@
 
 <div class="album py-5">
     <div th:if="${favoriteRecipes.size() > 0}">
-        <h2 id="favoriteRecipesAlbumHeader">Любими рецепти</h2>
+        <h2 id="favoriteRecipesAlbumHeader">Favorite Recipes</h2>
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div th:each="recipe : ${favoriteRecipes}" class="col">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <p th:text="${recipe}" class="card-text">Име</p>
+                            <p th:text="${recipe}" class="card-text">Recipe Name</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <form action="/recipe" method="get">
                                         <input type="hidden" name="title" th:value="${recipe}"/>
                                         <button type="submit"
-                                                class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover">Виж
-                                            рецептата
+                                                class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover">
+                                            See Recipe
                                         </button>
                                     </form>
                                 </div>

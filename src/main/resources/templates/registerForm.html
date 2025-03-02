@@ -32,29 +32,29 @@
               class="col-10 col-sm-8 col-lg-6">
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="inputEmail4">Имейл</label>
+                    <label for="inputEmail4">Email</label>
                     <input type="email" class="form-control" id="inputEmail4" name="email"
-                           placeholder="Въведи имейл">
-                    <p th:if="${#fields.hasErrors('email')}" class="errors">Невалиден имейл.</p>
+                           placeholder="Email">
+                    <p th:if="${#fields.hasErrors('email')}" class="errors">Invalid email</p>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="inputPassword4" >Парола</label>
+                    <label for="inputPassword4" >Password</label>
                     <input type="password" class="form-control" id="inputPassword4" name="password"
-                           placeholder="Въведи парола">
+                           placeholder="Passowrd">
                     <p th:if="${#fields.hasErrors('password')}" class="errors"
-                      >Невалидна парола</p>
+                      >Invalid password</p>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="confirmPassword" >Потвърди парола</label>
+                    <label for="confirmPassword" >Confirm Password</label>
                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                           placeholder="Подвърди парола">
+                           placeholder="Confirm Password">
                     <p th:if="${#fields.hasErrors('confirmPassword')}" class="errors"
-                       >Паролите не съвпадат</p>
+                       >Passwords does not match</p>
                 </div>
 
             </div>
             <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover"
-                    >Регистрация</button>
+                    >Register</button>
         </form>
 
     </div>

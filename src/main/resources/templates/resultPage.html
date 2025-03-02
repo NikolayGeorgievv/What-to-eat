@@ -23,7 +23,7 @@
 
 <div id="loading-screen" class="loading-screen">
     <img src="/images/gif1.gif" alt="Loading..." width="100px" height="100px">
-    <p>Приготвяме вашите рецепти!</p>
+    <p>Preparing your recipe!</p>
 </div>
 
 
@@ -206,16 +206,21 @@
         left: 44%;
         width: 150px;
         height: 100px;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgba(0,0,0,0);
         color: white;
         text-align: center;
         font-size: 2em;
         z-index: 9999;
         justify-content: center;
         align-items: center;
+        border-radius: 50%;
     }
 
     .loading-screen p {
+        position: fixed;
+        display: flex;
+        top: 65%;
+        left: 44%;
         font-size: 18px;
         color: #333;
         margin-top: 10px;

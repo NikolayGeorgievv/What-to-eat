@@ -10,24 +10,25 @@
 
 <div class="container my-5" id="searchBar">
     <div class="d-flex justify-content-center mb-4" style="position: relative">
-        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">Търси по
-            продукти
+        <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
+            Search by products
         </button>
-        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold btnHover">Търси по рецепта
+        <button id="recipeSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold btnHover">
+            Search by recipe name
         </button>
     </div>
     <form id="searchForm" action="/search" method="get" >
         <input type="hidden" id="searchType" name="searchType" value="product">
         <div id="productSearch" class="search-section">
-            <h2>Търси по продукти</h2>
+            <h2>Search by products</h2>
             <input type="text" class="form-control" name="productName" placeholder="Въведи продукт/продукти..">
         </div>
         <div id="recipeSearch" class="search-section d-none">
-            <h2>Търси по рецепта</h2>
+            <h2>Search by recipe name</h2>
             <input type="text" class="form-control btnLike" name="recipeName" placeholder="Въведи име на рецепта">
         </div>
         <div style="position: relative">
-        <button type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton btnHover">Търси</button>
+        <button type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton btnHover">Search</button>
         </div>
     </form>
 </div>
@@ -58,8 +59,8 @@
     buttons.forEach(button => {
         button.addEventListener('click', function (e) {
             if (!button.classList.contains('searchButton')) {
-                // e.preventDefault();
                 // Uncomment this line to prevent the form from submitting
+                // e.preventDefault();
             }
             button.classList.add("animate");
             setTimeout(() => {

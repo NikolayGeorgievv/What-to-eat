@@ -28,22 +28,22 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" th:href="@{/mainPage}">Начало</a>
+                            <a class="nav-link active" aria-current="page" th:href="@{/mainPage}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" th:href="@{/userProfile}">Профил</a>
+                            <a class="nav-link active" th:href="@{/userProfile}">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/searchPage}">Търси</a>
+                            <a class="nav-link" th:href="@{/searchPage}">Search</a>
                         </li>
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                               aria-expanded="false">Още</a>
+                               aria-expanded="false">More</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Контакти</a></li>
-                                <li><a class="dropdown-item" href="#">За нас</a></li>
-                                <li><a class="dropdown-item" href="/getAddRecipeForm">Добави рецепта</a></li>
+                                <li><a class="dropdown-item" href="#">Contacts</a></li>
+                                <li><a class="dropdown-item" href="#">About</a></li>
+                                <li><a class="dropdown-item" href="/getAddRecipeForm">Add Recipe</a></li>
                             </ul>
                         </li>
                         <li class="nav-item" sec:authorize="hasRole('ADMIN')">
@@ -57,12 +57,12 @@
             <div sec:authorize="isAnonymous()" class="col-md-2 text-end d-flex">
                 <a th:href="@{/users/login}">
                     <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover"
-                            style="width: 110px">Вход
+                            style="width: 110px">Login
                     </button>
                 </a>
                 <a th:href="@{/users/register}">
                     <button type="button" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover"
-                            style="width: fit-content">Регистрация
+                            style="width: fit-content">Register
                     </button>
                 </a>
             </div>
@@ -72,7 +72,7 @@
                 <form th:method="post"
                       th:action="@{/logout}">
                     <button type="submit" class="btn btn-outline-warning btn-md px-4 me-sm-3 fw-bold btnHover" value="Logout"
-                    >Изход
+                    >Logout
                     </button>
 
                 </form>
