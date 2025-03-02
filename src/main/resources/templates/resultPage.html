@@ -21,54 +21,39 @@
 
 <div th:replace="~{fragments/search-bar}"></div>
 
-<div id="loading-screen" class="loading-screen">
-    <img src="/images/gif1.gif" alt="Loading..." width="100px" height="100px">
-    <p>Preparing your recipe!</p>
-</div>
+<div th:replace="~{fragments/generatedRecipe}"></div>
 
 
-<div class="container my-1 d-flex flex-column align-items-center" id="recipeContainer">
-    <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item page-button"><a th:if="${page.hasPrevious()}"
-                                     th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Предишна</a>
-            </li>
-            <li class="page-item"><span th:text="'(' +  ${page.number + 1} + ')'">1</span></li>
-            <li class="page-item page-button"><a th:if="${page.hasNext()}"
-                                     th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Следваща</a>
-            </li>
-        </ul>
-    </nav>
-    <div id="results" class="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-3" >
-        <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3  d-flex flex-column" th:attr="data-recipe-id=${recipe.id}">
-            <h6 id="likedCounterInfo" th:text="'В любими на ' + ${recipe.getLikedCounter()} + ' потребителя'"></h6>
-            <div class="d-flex justify-content-around">
-                <div th:replace="~{fragments/recipeHeaderFunctionality}"></div>
-            </div>
-            <h5>Необходими продукти:</h5>
-            <div th:each="ingredient : ${recipe.getIngredients()}">
-                <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>
-            </div>
-            <button class="btn-link" onclick="toggleContent(this)">Цъкни за рецепта</button>
-            <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>
-        </div>
-    </div>
-</div>
+<!--<div class="container my-1 d-flex flex-column align-items-center" id="recipeContainer">-->
+<!--    <nav>-->
+<!--        <ul class="pagination justify-content-center">-->
+<!--            <li class="page-item page-button"><a th:if="${page.hasPrevious()}"-->
+<!--                                     th:href="@{/search(page=${page.number - 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Предишна</a>-->
+<!--            </li>-->
+<!--            <li class="page-item"><span th:text="'(' +  ${page.number + 1} + ')'">1</span></li>-->
+<!--            <li class="page-item page-button"><a th:if="${page.hasNext()}"-->
+<!--                                     th:href="@{/search(page=${page.number + 1}, size=${page.size}, searchType=${searchType}, productName=${productName}, recipeName=${recipeName})}">Следваща</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--    <div id="results" class="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-3" >-->
+<!--        <div th:each="recipe : ${page.content}" id="singleRecipe" class="col-6 col-sm-4 col-md-3  d-flex flex-column" th:attr="data-recipe-id=${recipe.id}">-->
+<!--            <h6 id="likedCounterInfo" th:text="'В любими на ' + ${recipe.getLikedCounter()} + ' потребителя'"></h6>-->
+<!--            <div class="d-flex justify-content-around">-->
+<!--                <div th:replace="~{fragments/recipeHeaderFunctionality}"></div>-->
+<!--            </div>-->
+<!--            <h5>Необходими продукти:</h5>-->
+<!--            <div th:each="ingredient : ${recipe.getIngredients()}">-->
+<!--                <p th:text="${ingredient.toString()}" style="margin-top: -10px"></p>-->
+<!--            </div>-->
+<!--            <button class="btn-link" onclick="toggleContent(this)">Цъкни за рецепта</button>-->
+<!--            <p th:text="${recipe.preparationDescription}" class="full-content d-none">Full Preparation Description</p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 
 <script>
-
-    function toggleContent(button) {
-        const fullContent = button.nextElementSibling;
-        if (fullContent.classList.contains('d-none')) {
-            fullContent.classList.remove('d-none');
-            button.style.display = 'none';
-        } else {
-            fullContent.classList.add('d-none');
-            button.textContent = 'Show more';
-        }
-    }
-
     document.getElementById('productSearchBtn').addEventListener('click', function () {
         document.getElementById('productSearch').classList.remove('d-none');
         document.getElementById('recipeSearch').classList.add('d-none');
@@ -90,29 +75,7 @@
         document.getElementById('productSearchBtn').classList.remove('btn-selected');
     });
 
-    let minLoadingTimeReached = false;
-    const MIN_LOADING_TIME = 1500;
 
-
-    document.getElementById('loading-screen').style.display = 'block';
-
-    // Set a timer to track the minimum display time for the loading screen
-    setTimeout(function() {
-        minLoadingTimeReached = true;
-        hideLoadingScreenIfReady();
-    }, MIN_LOADING_TIME);
-
-
-    window.addEventListener('load', function() {
-        hideLoadingScreenIfReady();
-    });
-
-    function hideLoadingScreenIfReady() {
-        // Check if both conditions are met: page is loaded and minimum time has passed
-        if (minLoadingTimeReached) {
-            document.getElementById('loading-screen').style.display = 'none';
-        }
-    }
 </script>
 </body>
 

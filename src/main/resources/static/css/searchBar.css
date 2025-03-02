@@ -22,7 +22,7 @@
 .searchButton {
     margin-top: 20px;
     margin-right: 100%;
-    margin-left: 67% !important;
+    margin-left: 66% !important;
 }
 
 * {
@@ -31,4 +31,8 @@
 
 #searchBar{
     z-index: 1;
+}
+
+#searchForm{
+    margin-left: 110px;
 }

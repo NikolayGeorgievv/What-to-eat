@@ -8,6 +8,11 @@
 </head>
 <body>
 
+<div id="loading-screen" class="loading-screen">
+    <img src="/images/gif1.gif" alt="Loading..." width="100px" height="100px">
+    <p>Preparing your recipe!</p>
+</div>
+
 <div class="container my-5" id="searchBar">
     <div class="d-flex justify-content-center mb-4" style="position: relative">
         <button id="productSearchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
@@ -17,18 +22,18 @@
             Search by recipe name
         </button>
     </div>
-    <form id="searchForm" action="/search" method="get" >
+    <form id="searchForm" action="/generate-recipe" method="post" >
         <input type="hidden" id="searchType" name="searchType" value="product">
         <div id="productSearch" class="search-section">
             <h2>Search by products</h2>
-            <input type="text" class="form-control" name="productName" placeholder="Въведи продукт/продукти..">
+            <input type="text" class="form-control" name="ingredients" placeholder="Enter your available products here...">
         </div>
         <div id="recipeSearch" class="search-section d-none">
             <h2>Search by recipe name</h2>
-            <input type="text" class="form-control btnLike" name="recipeName" placeholder="Въведи име на рецепта">
+            <input type="text" class="form-control btnLike" name="recipeName" placeholder="Enter recipe name here...">
         </div>
         <div style="position: relative">
-        <button type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton btnHover">Search</button>
+        <button type="submit" id="searchBtn" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold searchButton btnHover">Search</button>
         </div>
     </form>
 </div>
@@ -68,7 +73,82 @@
             }, 600);
         });
     });
+
+
+
+
+
+    function showLoadingScreen() {
+        document.getElementById("loading-screen").style.display = "block"; // Show loading
+    }
+
+    function hideLoadingScreen() {
+        document.getElementById("loading-screen").style.display = "none"; // Hide loading
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const recipeText = document.getElementById("recipeTextArea").value.trim();
+        const form = document.getElementById("searchForm");
+
+        form.addEventListener("submit", function () {
+            showLoadingScreen(); // Show loading when form is submitted
+        });
+
+        if (recipeText.length > 0) {
+            hideLoadingScreen();
+        }
+    });
 </script>
 
 </body>
+<!--        TODO: Take this into file-->
+<style>
+    #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: visible;
+        opacity: 1;
+
+        /*margin-top: 300px;*/
+    }
+
+    #loading-screen {
+        display: none;
+    }
+
+    .loading-screen img {
+        position: fixed;
+        display: flex;
+        top: 50%;
+        left: 44%;
+        width: 150px;
+        height: 100px;
+        background-color: rgba(0,0,0,0);
+        color: white;
+        text-align: center;
+        font-size: 2em;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+
+    .loading-screen p {
+        position: fixed;
+        display: flex;
+        top: 65%;
+        left: 44%;
+        font-size: 18px;
+        color: #333;
+        margin-top: 10px;
+    }
+</style>
 </html>
