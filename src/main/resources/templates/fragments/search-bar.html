@@ -86,18 +86,26 @@
         document.getElementById("loading-screen").style.display = "none"; // Hide loading
     }
 
+
     document.addEventListener("DOMContentLoaded", function () {
-        const recipeText = document.getElementById("recipeTextArea").value.trim();
+        const recipeDiv = document.getElementById("recipeTextArea");
         const form = document.getElementById("searchForm");
 
         form.addEventListener("submit", function () {
             showLoadingScreen(); // Show loading when form is submitted
         });
 
-        if (recipeText.length > 0) {
-            hideLoadingScreen();
-        }
+        // Use MutationObserver to detect when the recipe is inserted into the div
+        const observer = new MutationObserver(function (mutationsList, observer) {
+            if (recipeDiv.innerHTML.trim().length > 0) {
+                hideLoadingScreen(); // Hide loading when recipe appears
+                observer.disconnect(); // Stop observing after the content is set
+            }
+        });
+
+        observer.observe(recipeDiv, { childList: true, subtree: true });
     });
+
 </script>
 
 </body>
