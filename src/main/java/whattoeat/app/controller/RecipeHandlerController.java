@@ -3,6 +3,7 @@ package whattoeat.app.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
@@ -48,8 +49,7 @@ public class RecipeHandlerController {
     }
 
     @PostMapping("/addToFavorite")
-    @ResponseBody
-    public Map<String, Object> addToFavorite(@RequestParam String recipeTitle, @RequestParam String fullRecipe, Authentication authentication) {
+    public String addToFavorite(@RequestParam String recipeTitle, @RequestParam String fullRecipe, Authentication authentication, Model model) {
         String userEmail = authentication.getName();
 
         recipeService.addRecipeToFavorites(recipeTitle, userEmail, fullRecipe);
@@ -57,7 +57,7 @@ public class RecipeHandlerController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("favoritesMap", getFavorites());
-        return response;
+        return "userProfile";
     }
 
 //    @PostMapping("/removeFromFavorite")

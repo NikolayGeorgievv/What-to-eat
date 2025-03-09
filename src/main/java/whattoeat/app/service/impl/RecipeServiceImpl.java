@@ -41,6 +41,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void addRecipeToFavorites(String recipeTitle, String userEmail, String fullRecipe) {
+        validateRecipe(recipeTitle, fullRecipe);
         Optional<User> optionalUser = userService.findByEmail(userEmail);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -54,6 +55,12 @@ public class RecipeServiceImpl implements RecipeService {
             userService.saveAndFlush(user);
         } else {
             throw new RuntimeException("User not found!");
+        }
+    }
+
+    private void validateRecipe(String recipeTitle, String fullRecipe) {
+        if (recipeTitle.trim().isEmpty() || fullRecipe.trim().isEmpty()) {
+            throw new RuntimeException("Recipe title or recipe description is empty!");
         }
     }
 

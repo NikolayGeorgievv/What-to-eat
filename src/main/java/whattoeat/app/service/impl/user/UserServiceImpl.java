@@ -87,8 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<String> getFavoriteRecipes(String userEmail) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
-//        return user.getFavoriteRecipes();
-        return List.of();
+        return user.getFavoriteRecipes().stream().map(FavoriteRecipe::getRecipeName).toList();
     }
 
     @Override
