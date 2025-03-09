@@ -1,5 +1,6 @@
 package whattoeat.app.service.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,21 +13,25 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
+import static whattoeat.app.constants.Prompts.PROMPT_FOR_INGREDIENTS_INPUT;
+import static whattoeat.app.constants.Prompts.PROMPT_FOR_RECIPE_NAME_INPUT;
+
 @Service
 public class RecipeGenerator {
 
     private final String API_URL = "https://api.openai.com/v1/chat/completions";
     @Value("${recipeGenerator}")
     private String API_KEY;
+    private String requestBody;
 
-    public String getRecipe(String userInput) throws Exception {
+    public String getRecipe(String searchType, String ingredients, String recipeName) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
-        String requestBody = new ObjectMapper().writeValueAsString(Map.of(
-                "model", "gpt-4o-mini",
-                "messages", List.of(Map.of("role", "user", "content", userInput)),
-                "max_tokens", 800
-        ));
+        if (searchType.equals("product")){
+            requestBody = getSearchByProductsRequestBody(ingredients);
+        } else if (searchType.equals("recipe")) {
+            requestBody = getSearchByRecipeNameRequestBody(recipeName);
+        }
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
@@ -40,5 +45,26 @@ public class RecipeGenerator {
         // Parse response
         JsonNode jsonResponse = new ObjectMapper().readTree(response.body());
         return jsonResponse.get("choices").get(0).get("message").get("content").asText();
+    }
+
+    private String getSearchByProductsRequestBody(String ingredients) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(Map.of(
+                "model", "gpt-4o-mini",
+                "messages", List.of(
+                        Map.of("role", "system", "content", PROMPT_FOR_INGREDIENTS_INPUT
+                                ),
+                        Map.of("role", "user", "content", ingredients)),
+                "max_tokens", 800
+        ));
+    }
+
+    private String getSearchByRecipeNameRequestBody(String recipeName) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(Map.of(
+                "model", "gpt-4o-mini",
+                "messages", List.of(
+                        Map.of("role", "system", "content", PROMPT_FOR_RECIPE_NAME_INPUT),
+                        Map.of("role", "user", "content", recipeName)),
+                "max_tokens", 800
+        ));
     }
 }

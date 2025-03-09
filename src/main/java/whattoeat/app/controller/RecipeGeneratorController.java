@@ -3,7 +3,6 @@ package whattoeat.app.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import whattoeat.app.service.rest.RecipeGenerator;
@@ -19,8 +18,9 @@ public class RecipeGeneratorController {
     }
 
     @PostMapping("/generate-recipe")
-    public String generateRecipe(@RequestParam String ingredients, Model model) throws Exception {
-        String text = recipeGenerator.getRecipe("Create a recipe using: " + ingredients);
+    public String generateRecipe(@RequestParam String searchType, @RequestParam(required = false) String ingredients,
+                                 @RequestParam(required = false) String recipeName, Model model) throws Exception {
+        String text = recipeGenerator.getRecipe(searchType ,ingredients, recipeName);
         String htmlRecipe = MarkdownUtils.convertMarkdownToHtml(text);
         model.addAttribute("recipe", htmlRecipe);
         model.addAttribute("ingredients", ingredients);
