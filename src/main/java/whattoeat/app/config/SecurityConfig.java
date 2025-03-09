@@ -46,7 +46,7 @@ public class SecurityConfig {
                                     // The names of the input fields
                                     .usernameParameter("email")
                                     .passwordParameter("password")
-                                    .defaultSuccessUrl("/userProfile")
+                                    .defaultSuccessUrl("/searchPage")
                                     .failureUrl("/users/login-error");
 
                         }
