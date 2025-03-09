@@ -13,12 +13,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-
-    @ElementCollection
-    @CollectionTable(name = "user_favorite_recipes", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "recipe")
-    private List<String> favoriteRecipes;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -30,13 +24,25 @@ public class User extends BaseEntity {
     @JoinColumn(name = "user_id")
     private List<Notification> notifications;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private List<FavoriteRecipe> favoriteRecipes;
+
+    public List<FavoriteRecipe> getFavoriteRecipes() {
+        return favoriteRecipes;
+    }
+
+    public void setFavoriteRecipes(List<FavoriteRecipe> favoriteRecipes) {
+        this.favoriteRecipes = favoriteRecipes;
+    }
+
     public User() {
     }
 
-    public User(String email, String password, List<String> favoriteRecipes) {
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.favoriteRecipes = favoriteRecipes;
+
     }
 
     public String getEmail() {
@@ -55,13 +61,6 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public List<String> getFavoriteRecipes() {
-        return favoriteRecipes;
-    }
-
-    public void setFavoriteRecipes(List<String> favoriteRecipes) {
-        this.favoriteRecipes = favoriteRecipes;
-    }
 
     public List<UserRoleEntity> getRoles() {
         return roles;

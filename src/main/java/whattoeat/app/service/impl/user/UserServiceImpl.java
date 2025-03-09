@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import whattoeat.app.dto.RegisterUserDTO;
+import whattoeat.app.model.FavoriteRecipe;
 import whattoeat.app.model.Notification;
 import whattoeat.app.model.User;
 import whattoeat.app.model.UserRoleEntity;
@@ -86,7 +87,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<String> getFavoriteRecipes(String userEmail) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return user.getFavoriteRecipes();
+//        return user.getFavoriteRecipes();
+        return List.of();
     }
 
     @Override
@@ -126,15 +128,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(userEmail);
     }
 
-    private String setApprovedRecipeNotification(String recipeName) {
-        return String.format("Вашата рецепта %s беше одобрена!", recipeName);
+    @Override
+    public void saveAndFlush(User user) {
+        userRepository.saveAndFlush(user);
     }
 
     private User mapUser(RegisterUserDTO registerUserDTO) {
         User user = new User();
         user.setEmail(registerUserDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
-        List<String> favoriteRecipes = new ArrayList<>();
+        List<FavoriteRecipe> favoriteRecipes = new ArrayList<>();
         user.setFavoriteRecipes(favoriteRecipes);
         List<Notification> notifications = new ArrayList<>();
         user.setNotifications(notifications);

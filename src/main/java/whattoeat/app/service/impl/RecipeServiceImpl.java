@@ -1,10 +1,12 @@
 package whattoeat.app.service.impl;
 
 import org.springframework.stereotype.Service;
+import whattoeat.app.model.FavoriteRecipe;
 import whattoeat.app.model.Recipe;
 import whattoeat.app.model.User;
 import whattoeat.app.repository.RecipeRepository;
 import whattoeat.app.service.rest.RecipeGenerator;
+import whattoeat.app.service.service.FavoriteRecipeService;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
@@ -17,11 +19,13 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeGenerator recipeGenerator;
     private final UserService userService;
+    private final FavoriteRecipeService favoriteRecipeService;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeGenerator recipeGenerator, UserService userService) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeGenerator recipeGenerator, UserService userService, FavoriteRecipeService favoriteRecipeService) {
         this.recipeRepository = recipeRepository;
         this.recipeGenerator = recipeGenerator;
         this.userService = userService;
+        this.favoriteRecipeService = favoriteRecipeService;
     }
 
     @Override
@@ -40,11 +44,14 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<User> optionalUser = userService.findByEmail(userEmail);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.getFavoriteRecipes().add(recipeTitle);
             Recipe recipe = new Recipe();
             recipe.setName(recipeTitle);
             recipe.setPreparationDescription(fullRecipe);
+            FavoriteRecipe favoriteRecipe = new FavoriteRecipe(user, recipe, recipeTitle, fullRecipe);
+            user.getFavoriteRecipes().add(favoriteRecipe);
             recipeRepository.saveAndFlush(recipe);
+            favoriteRecipeService.saveAndFlushFavoriteRecipe(favoriteRecipe);
+            userService.saveAndFlush(user);
         } else {
             throw new RuntimeException("User not found!");
         }
@@ -84,7 +91,7 @@ public class RecipeServiceImpl implements RecipeService {
         User user = userService.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Map<Long, Boolean> userFavorites = new HashMap<>();
         user.getFavoriteRecipes().forEach(recipeName -> {
-            Recipe recipe = findByName(recipeName);
+            Recipe recipe = findByName(recipeName.getRecipeName());
             userFavorites.put(recipe.getId(), true);
         });
         return userFavorites;

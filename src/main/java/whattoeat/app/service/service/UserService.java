@@ -22,4 +22,6 @@ public interface UserService {
 //    void sendApprovedNotificationToUser(String title);
 
     Optional<User> findByEmail(String userEmail);
+
+    void saveAndFlush(User user);
 }
