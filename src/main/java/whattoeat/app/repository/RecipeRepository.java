@@ -4,10 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +27,4 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findAllByNameContainingIgnoreCase(String recipeName);
 
     Recipe findByNameIgnoreCase(String title);
-
-
-//    Optional<List<Recipe>> findAllByIngredientsContainingIgnoreCase(List<String> ingredients);
 }

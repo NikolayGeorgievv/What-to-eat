@@ -1,33 +1,27 @@
 package whattoeat.app.service.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import whattoeat.app.dto.CreateCustomRecipeDTO;
-import whattoeat.app.dto.RecipeDTO;
-import whattoeat.app.model.CustomRecipeFromUsers;
+import org.springframework.stereotype.Service;
 import whattoeat.app.model.Recipe;
 
-import java.util.List;
+import java.util.Map;
 
+@Service
 public interface RecipeService {
 
-    Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest);
 
-    Page<RecipeDTO> searchByRecipeName(String recipeName, PageRequest pageRequest);
-
-    RecipeDTO findByTitle(String title);
+//    RecipeDTO findByTitle(String title);
 
     Recipe findById(Long recipeId);
 
     Recipe findByName(String recipeName);
 
-    void addCustomRecipe(CustomRecipeFromUsers customRecipe);
+    String generateRecipe(String searchType, String ingredients, String recipeName) throws Exception;
 
-    List<CreateCustomRecipeDTO> getAllCustomRecipes();
+    String extractTitleFromGeneratedRecipe(String generatedRecipe);
 
-    CreateCustomRecipeDTO findCustomRecipeByTitle(String title);
+    void addRecipeToFavorites(String recipeTitle, String userEmail, String fullRecipe);
 
-    void approveCustomRecipe(String title);
+    Map<Long, Boolean> getFavorites(String email);
 
-    void rejectCustomRecipe(String title);
+
 }

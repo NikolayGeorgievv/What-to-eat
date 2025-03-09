@@ -1,23 +1,14 @@
 package whattoeat.app.controller;
 
 
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import whattoeat.app.dto.CreateCustomRecipeDTO;
 import whattoeat.app.service.service.UserService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class UserController {
@@ -33,28 +24,6 @@ public class UserController {
         return "userProfile";
     }
 
-    @GetMapping("/getAddRecipeForm")
-    public String getAddRecipe() {
-        return "addRecipeForm";
-    }
-
-    @PostMapping("/addCustomRecipe")
-    public ResponseEntity<?> addCustomRecipe(@RequestBody @Valid CreateCustomRecipeDTO recipeDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-        try {
-            userService.addCustomRecipe(userEmail, recipeDTO);
-        }catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("recipeNameNotUnique", e.getMessage()));
-        }
-        return ResponseEntity.ok().build();
-    }
     @ModelAttribute("userNotifications")
     public List<String> getUserNotifications() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,16 +38,5 @@ public class UserController {
         String userEmail = authentication.getName();
 
         return userService.getFavoriteRecipes(userEmail);
-    }
-    @ModelAttribute("customRecipes")
-    public List<String> getCustomRecipes() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-
-        return userService.getUsersCustomRecipes(userEmail);
-    }
-    @ModelAttribute("customRecipeDTO")
-    public CreateCustomRecipeDTO getRecipeDTO() {
-        return new CreateCustomRecipeDTO();
     }
 }

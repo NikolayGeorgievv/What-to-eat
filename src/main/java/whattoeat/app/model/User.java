@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -18,11 +18,6 @@ public class User extends BaseEntity{
     @CollectionTable(name = "user_favorite_recipes", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "recipe")
     private List<String> favoriteRecipes;
-
-    @ElementCollection
-    @CollectionTable(name = "recipes_added_by_user", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "recipes_added_by_user")
-    private List<String> recipesAddedByUser;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -74,14 +69,6 @@ public class User extends BaseEntity{
 
     public void setRoles(List<UserRoleEntity> roles) {
         this.roles = roles;
-    }
-
-    public List<String> getRecipesAddedByUser() {
-        return recipesAddedByUser;
-    }
-
-    public void setRecipesAddedByUser(List<String> recipesAddedByUser) {
-        this.recipesAddedByUser = recipesAddedByUser;
     }
 
     public List<Notification> getNotifications() {

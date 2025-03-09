@@ -2,16 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Recipe Text area</title>
 </head>
 <body>
 
-<div id="recipeTextArea" th:utext="${recipe}"></div>
-<!--<textarea id="recipeTextArea" placeholder="Your recipe will appear here..." readonly th:text="${recipe}"></textarea>-->
+<div>
+    <form method="post" action="/addToFavorite">
+        <input type="hidden" name="recipeTitle" th:value="${recipeTitle}">
+        <input type="hidden" name="fullRecipe" th:value="${recipe}">
+        <button id="addToFavoritesButton" type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
+            Add to favorites
+        </button>
+    </form>
+    <div id="recipeTextArea" th:utext="${recipe}"></div>
+</div>
 <!--TODO: Style the text area-->
-
 </body>
 <style>
+    #addToFavoritesButton{
+        margin-left: 200px;
+    }
+
     #recipeTextArea {
         border: 1px solid black;
         border-radius: 10px;
@@ -35,7 +46,8 @@
     #recipeTextArea::-webkit-scrollbar-track {
         background: #f8f3ef;
     }
-    #recipeTextArea > *{
+
+    #recipeTextArea > * {
         margin-top: 10px;
         margin-bottom: 10px;
         margin-left: 25px;

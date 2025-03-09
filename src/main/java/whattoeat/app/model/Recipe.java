@@ -1,8 +1,8 @@
 package whattoeat.app.model;
 
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "recipes")
@@ -11,15 +11,8 @@ public class Recipe extends BaseEntity {
     @Column
     private String name;
 
-    @Column
-    @OneToMany(mappedBy = "recipe")
-    private List<RecipeIngredient> ingredients;
-
     @Column(columnDefinition = "text")
     private String preparationDescription;
-
-    @Column(name = "liked_counter")
-    private int likedCounter;
 
 
     public Recipe() {
@@ -33,14 +26,6 @@ public class Recipe extends BaseEntity {
         this.name = name;
     }
 
-    public List<RecipeIngredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<RecipeIngredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
     public String getPreparationDescription() {
         return preparationDescription;
     }
@@ -49,14 +34,4 @@ public class Recipe extends BaseEntity {
         this.preparationDescription = preparationDescription;
     }
 
-    public int getLikedCounter() {
-        return likedCounter;
-    }
-
-    public void setLikedCounter(int likedCounter) {
-        this.likedCounter = likedCounter;
-        if (this.likedCounter < 0) {
-            this.likedCounter = 0;
-        }
-    }
 }

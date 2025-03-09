@@ -1,89 +1,66 @@
 package whattoeat.app.service.impl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import whattoeat.app.dto.CreateCustomRecipeDTO;
-import whattoeat.app.dto.RecipeDTO;
-import whattoeat.app.model.CustomRecipeFromUsers;
-import whattoeat.app.model.Ingredient;
 import whattoeat.app.model.Recipe;
-import whattoeat.app.model.RecipeIngredient;
-import whattoeat.app.repository.CustomRecipeFromUsersRepository;
-import whattoeat.app.repository.IngredientRepository;
-import whattoeat.app.repository.RecipeIngredientsRepository;
+import whattoeat.app.model.User;
 import whattoeat.app.repository.RecipeRepository;
-import whattoeat.app.service.impl.seed.CSVService;
+import whattoeat.app.service.rest.RecipeGenerator;
 import whattoeat.app.service.service.RecipeService;
+import whattoeat.app.service.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static whattoeat.app.constants.Constants.INVALID_RECIPE_NAME;
-import static whattoeat.app.utils.RecipesUtils.*;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private final IngredientRepository ingredientRepository;
-    private final RecipeIngredientsRepository recipeIngredientsRepository;
-    private final CustomRecipeFromUsersRepository customRecipeFromUsersRepository;
-    private final CSVService csvService;
+    private final RecipeGenerator recipeGenerator;
+    private final UserService userService;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, RecipeIngredientsRepository recipeIngredientsRepository, CustomRecipeFromUsersRepository customRecipeFromUsersRepository, CSVService csvService) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeGenerator recipeGenerator, UserService userService) {
         this.recipeRepository = recipeRepository;
-        this.ingredientRepository = ingredientRepository;
-        this.recipeIngredientsRepository = recipeIngredientsRepository;
-        this.customRecipeFromUsersRepository = customRecipeFromUsersRepository;
-        this.csvService = csvService;
+        this.recipeGenerator = recipeGenerator;
+        this.userService = userService;
+    }
+
+    @Override
+    public String generateRecipe(String searchType, String ingredients, String recipeName) throws Exception {
+        return recipeGenerator.getRecipe(searchType, ingredients, recipeName);
+    }
+
+    @Override
+    public String extractTitleFromGeneratedRecipe(String generatedRecipe) {
+        return generatedRecipe.split(" \\.\\.\\.")[0].replace("## ", "").trim();
     }
 
 
     @Override
-    public Page<RecipeDTO> searchByProductName(String productName, PageRequest pageRequest) {
-        List<Ingredient> ingredientList = new ArrayList<>();
-        List<String> productsNames = parseIngredients(productName);
-        productsNames.forEach(product -> {
-            Optional<Ingredient> ingredient = ingredientRepository.findByName(product);
-            ingredient.ifPresent(ingredientList::add);
-        });
-
-        List<String> ingredientNames = ingredientList.stream()
-                .map(Ingredient::getName)
-                .toList();
-
-
-        List<Recipe> allByIngredients = recipeRepository.findAllByIngredients(ingredientNames);
-
-        return getRecipeDTOS(pageRequest, allByIngredients);
-
+    public void addRecipeToFavorites(String recipeTitle, String userEmail, String fullRecipe) {
+        Optional<User> optionalUser = userService.findByEmail(userEmail);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.getFavoriteRecipes().add(recipeTitle);
+            Recipe recipe = new Recipe();
+            recipe.setName(recipeTitle);
+            recipe.setPreparationDescription(fullRecipe);
+            recipeRepository.saveAndFlush(recipe);
+        } else {
+            throw new RuntimeException("User not found!");
+        }
     }
 
-
-
-    @Override
-    public Page<RecipeDTO> searchByRecipeName(String recipeName, PageRequest pageRequest) {
-
-        List<Recipe> allRecipesByName = recipeRepository.findAllByNameContainingIgnoreCase(recipeName);
-        return getRecipeDTOS(pageRequest, allRecipesByName);
-    }
-
-    @Override
-    public RecipeDTO findByTitle(String title) {
-        Recipe recipeByName = this.recipeRepository.findByNameIgnoreCase(title);
-        return new RecipeDTO(
-                recipeByName.getId(),
-                recipeByName.getName(),
-                recipeByName.getPreparationDescription(),
-                recipeByName.getIngredients(),
-                recipeByName.getLikedCounter()
-        );
-    }
+//    @Override
+//    public RecipeDTO findByTitle(String title) {
+//        Recipe recipeByName = this.recipeRepository.findByNameIgnoreCase(title);
+//        return new RecipeDTO(
+//                recipeByName.getId(),
+//                recipeByName.getName(),
+//                recipeByName.getPreparationDescription(),
+//                recipeByName.getIngredients(),
+//                recipeByName.getLikedCounter()
+//        );
+//    }
 
     @Override
     public Recipe findById(Long recipeId) {
@@ -103,68 +80,16 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void addCustomRecipe(CustomRecipeFromUsers customRecipe) {
-        if (recipeRepository.findByName(customRecipe.getRecipeName()).isPresent()) {
-            throw new IllegalArgumentException(INVALID_RECIPE_NAME);
-        }
-
-        customRecipeFromUsersRepository.saveAndFlush(customRecipe);
-    }
-
-    @Override
-    public List<CreateCustomRecipeDTO> getAllCustomRecipes() {
-        List<CustomRecipeFromUsers> allCustomRecipes = customRecipeFromUsersRepository.findAll();
-        List<CreateCustomRecipeDTO> customRecipeDTOs = new ArrayList<>();
-
-
-        allCustomRecipes.forEach(customRecipe -> {
-            CreateCustomRecipeDTO createCustomRecipeDTO = new CreateCustomRecipeDTO(
-                    customRecipe.getRecipeName(),
-                    new ArrayList<>(),
-                    new ArrayList<>(),
-                    customRecipe.getDescription()
-            );
-            String[] rowsArr = customRecipe.getProductNameAndQuantity().split("\\n");
-            for (int i = 0; i < rowsArr.length; i++) {
-                String productName = rowsArr[i].split(" - ")[0];
-                String quantity = rowsArr[i].split(" -")[1];
-                createCustomRecipeDTO.getProductName().add(productName);
-                createCustomRecipeDTO.getQuantity().add(quantity);
-            }
-            customRecipeDTOs.add(createCustomRecipeDTO);
+    public Map<Long, Boolean> getFavorites(String email) {
+        User user = userService.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Map<Long, Boolean> userFavorites = new HashMap<>();
+        user.getFavoriteRecipes().forEach(recipeName -> {
+            Recipe recipe = findByName(recipeName);
+            userFavorites.put(recipe.getId(), true);
         });
-        return customRecipeDTOs;
+        return userFavorites;
     }
 
-    @Override
-    public CreateCustomRecipeDTO findCustomRecipeByTitle(String title) {
-        CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
-        return mapCustomRecipeToDTO(customRecipeByName);
-    }
-
-    @Override
-    public void approveCustomRecipe(String title) {
-        CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
-        mapCustomRecipeToRecipeEntityAndFlushIt(customRecipeByName,recipeRepository, ingredientRepository, recipeIngredientsRepository);
-        csvService.writeCustomRecipe(customRecipeByName);
-
-    }
-
-    @Override
-    public void rejectCustomRecipe(String title) {
-        CustomRecipeFromUsers customRecipeByName = customRecipeFromUsersRepository.findCustomRecipeFromUsersByRecipeName(title);
-        customRecipeFromUsersRepository.delete(customRecipeByName);
-    }
-
-
-
-    private Page<RecipeDTO> getRecipeDTOS(PageRequest pageRequest, List<Recipe> allRecipesByName) {
-        List<RecipeDTO> recipeDTOs = mapRecipes(allRecipesByName);
-
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), recipeDTOs.size());
-        return new PageImpl<>(recipeDTOs.subList(start, end), pageRequest, recipeDTOs.size());
-    }
 
     public List<String> parseIngredients(String input) {
         String[] ingredientsArray = input.split("[,\\s]+");
