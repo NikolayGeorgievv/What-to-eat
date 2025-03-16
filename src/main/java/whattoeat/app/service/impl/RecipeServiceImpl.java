@@ -1,6 +1,7 @@
 package whattoeat.app.service.impl;
 
 import org.springframework.stereotype.Service;
+import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.model.FavoriteRecipe;
 import whattoeat.app.model.Recipe;
 import whattoeat.app.model.User;
@@ -48,10 +49,12 @@ public class RecipeServiceImpl implements RecipeService {
             Recipe recipe = new Recipe();
             recipe.setName(recipeTitle);
             recipe.setPreparationDescription(fullRecipe);
-            FavoriteRecipe favoriteRecipe = new FavoriteRecipe(user, recipe, recipeTitle, fullRecipe);
-            user.getFavoriteRecipes().add(favoriteRecipe);
             recipeRepository.saveAndFlush(recipe);
+
+            FavoriteRecipe favoriteRecipe = new FavoriteRecipe(user, recipe, recipeTitle, fullRecipe, recipe.getId());
             favoriteRecipeService.saveAndFlushFavoriteRecipe(favoriteRecipe);
+
+            user.getFavoriteRecipes().add(favoriteRecipe);
             userService.saveAndFlush(user);
         } else {
             throw new RuntimeException("User not found!");
@@ -86,7 +89,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe findByName(String recipeName) {
-        Optional<Recipe> byName = recipeRepository.findByName(recipeName);
+        Optional<Recipe> byName = recipeRepository.findFirstByName(recipeName);
         if (byName.isEmpty()) {
             throw new IllegalArgumentException("Recipe with this name does not exist.");
         }
@@ -102,6 +105,20 @@ public class RecipeServiceImpl implements RecipeService {
             userFavorites.put(recipe.getId(), true);
         });
         return userFavorites;
+    }
+
+    @Override
+    public RecipeDTO findRecipeDTOById(Long id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Recipe not found"));
+        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getPreparationDescription());
+    }
+
+    @Override
+    public void removeFavoriteRecipe(Long recipeId, String userEmail) {
+        User user = userService.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<FavoriteRecipe> favoriteRecipes = user.getFavoriteRecipes();
+        favoriteRecipes.stream().filter(r -> r.getId().equals(recipeId)).findFirst().ifPresent(favoriteRecipes::remove);
+        userService.saveAndFlush(user);
     }
 
 

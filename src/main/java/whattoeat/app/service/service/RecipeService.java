@@ -1,6 +1,7 @@
 package whattoeat.app.service.service;
 
 import org.springframework.stereotype.Service;
+import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.model.Recipe;
 
 import java.util.Map;
@@ -24,4 +25,7 @@ public interface RecipeService {
     Map<Long, Boolean> getFavorites(String email);
 
 
+    RecipeDTO findRecipeDTOById(Long id);
+
+    void removeFavoriteRecipe(Long recipeId, String userEmail);
 }

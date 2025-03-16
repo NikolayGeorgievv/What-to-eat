@@ -1,10 +1,12 @@
 package whattoeat.app.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
@@ -29,12 +31,23 @@ public class RecipeHandlerController {
         return "resultPage";
     }
 
-//    @GetMapping("/recipe")
-//    public String getRecipe(@RequestParam("title") String title, Model model) {
-//        RecipeDTO recipe = recipeService.findByTitle(title);
+//    @GetMapping("/getSingleRecipe")
+//    public String getRecipe(@RequestParam("title") Long id, Model model) {
+//        RecipeDTO recipe = recipeService.findRecipeDTOById(id);
 //        model.addAttribute("recipe", recipe);
 //        return "singleRecipeResult";
 //    }
+
+    @GetMapping("/getSingleRecipe")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getFavoriteRecipe(@RequestParam Long recipeId) {
+        RecipeDTO recipe = recipeService.findRecipeDTOById(recipeId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("title", recipe.getName());
+        response.put("content", recipe.getPreparationDescription());
+        return ResponseEntity.ok(response);
+    }
 
 
     @ModelAttribute("favoritesMap")
@@ -57,7 +70,7 @@ public class RecipeHandlerController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("favoritesMap", getFavorites());
-        return "userProfile";
+        return "redirect:/userProfile";
     }
 
 //    @PostMapping("/removeFromFavorite")
@@ -72,11 +85,27 @@ public class RecipeHandlerController {
 //        return response;
 //    }
 
+    @PostMapping("removeFavoriteRecipe")
+    public String removeFavoriteRecipe(@RequestParam Long recipeId, Authentication authentication) {
+        String userEmail = authentication.getName();
+        recipeService.removeFavoriteRecipe(recipeId, userEmail);
+
+        return "redirect:/userProfile";
+    }
+
     @ModelAttribute("userNotifications")
     public List<String> getUserNotifications() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
         return userService.getUserNotifications(userEmail);
+    }
+
+    @ModelAttribute("favoriteRecipes")
+    public List<String> getFavoriteRecipes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        return userService.getFavoriteRecipes(userEmail);
     }
 }

@@ -5,7 +5,6 @@ public class RecipeDTO {
     private Long id;
     private String name;
     private String preparationDescription;
-    private Integer likedCounter;
 
     public RecipeDTO(Long id, String name, String preparationDescription) {
         this.id = id;

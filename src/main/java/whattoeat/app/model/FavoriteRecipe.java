@@ -18,16 +18,20 @@ public class FavoriteRecipe extends BaseEntity {
     @Column(name = "recipe_name")
     private String recipeName;
 
+    @Column
+    private Long favoriteRecipeId;
+
     @Column(name = "full_recipe", columnDefinition = "text")
     private String fullRecipe;
 
     public FavoriteRecipe() {}
 
-    public FavoriteRecipe(User user, Recipe recipe, String recipeName, String fullRecipe) {
+    public FavoriteRecipe(User user, Recipe recipe, String recipeName, String fullRecipe, Long favoriteRecipeId) {
         this.user = user;
         this.recipe = recipe;
         this.recipeName = recipeName;
         this.fullRecipe = fullRecipe;
+        this.favoriteRecipeId = favoriteRecipeId;
     }
 
     public User getUser() {
@@ -60,5 +64,13 @@ public class FavoriteRecipe extends BaseEntity {
 
     public void setFullRecipe(String fullRecipe) {
         this.fullRecipe = fullRecipe;
+    }
+
+    public Long getFavoriteRecipeId() {
+        return favoriteRecipeId;
+    }
+
+    public void setFavoriteRecipeId(Long recipeId) {
+        this.favoriteRecipeId = recipeId;
     }
 }

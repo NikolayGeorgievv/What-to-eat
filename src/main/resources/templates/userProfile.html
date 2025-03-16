@@ -26,14 +26,21 @@
                 <div th:each="recipe : ${favoriteRecipes}" class="col">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <p th:text="${recipe}" class="card-text">Recipe Name</p>
+                            <p th:text="${recipe.split('---')[0]}" class="card-text">Recipe Name</p>
+                            <p th:text="${recipe.split('---')[1]}" class="card-text" style="display: none">Recipe ID</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <form action="/recipe" method="get">
-                                        <input type="hidden" name="title" th:value="${recipe}"/>
+                                    <button type="submit"
+                                            class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover view-recipe-btn"
+                                            th:data-recipe-id="${recipe.split('---')[1]}"
+                                            data-bs-toggle="modal" data-bs-target="#recipeModal">
+                                        See Recipe
+                                    </button>
+                                    <form action="/removeFavoriteRecipe" method="POST">
+                                        <input type="hidden" name="recipeId" th:value="${recipe.split('---')[1]}">
                                         <button type="submit"
                                                 class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover">
-                                            See Recipe
+                                            Remove from favorite
                                         </button>
                                     </form>
                                 </div>
@@ -44,9 +51,54 @@
             </div>
         </div>
     </div>
+    <div class="modal fade modal" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content" id="recipeModalContent">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeTitle" th:text="${recipeTitle}"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="recipeContent" th:utext="${recipe}"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".view-recipe-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let recipeId = this.getAttribute("data-recipe-id");
+
+                console.log("Recipe ID:", recipeId);
+
+                fetch(`/getSingleRecipe?recipeId=` + recipeId)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("recipeTitle").innerText = data.title;
+                        document.getElementById("recipeContent").innerHTML = data.content;
+                    })
+                    .catch(error => console.error("Error fetching recipe:", error));
+            });
+        });
+    });
+</script>
 </body>
 <style>
+    .modal {
+        max-height: 100vh;
+        overflow: hidden!important;
+    }
+
+    .modal-open {
+        overflow: hidden!important;
+    }
+
     #favoriteRecipesAlbumHeader, #customRecipesAlbumHeader {
         text-align: center;
         margin-bottom: 20px;
