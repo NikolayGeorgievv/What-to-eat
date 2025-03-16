@@ -28,6 +28,7 @@ public class RecipeGeneratorController {
         model.addAttribute("recipe", htmlRecipe);
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("recipeTitle", recipeTitle);
+        model.addAttribute("recipeGenerated", true);
         return "resultPage";
 
     }

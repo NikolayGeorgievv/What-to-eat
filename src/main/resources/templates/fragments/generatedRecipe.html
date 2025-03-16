@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<div>
+<div id="generatedRecipeFragment" th:classappend="${recipeGenerated} ? '' : 'hiddenFragment'">
     <form method="post" action="/addToFavorite">
         <input type="hidden" name="recipeTitle" th:value="${recipeTitle}">
         <input type="hidden" name="fullRecipe" th:value="${recipe}">
@@ -16,9 +16,18 @@
     </form>
     <div id="recipeTextArea" th:utext="${recipe}"></div>
 </div>
+
+<script>
+    document.getElementById('searchBtn').addEventListener('click', function () {
+        document.getElementById('generatedRecipeFragment').classList.remove('hiddenFragment');
+    });
+</script>
 <!--TODO: Style the text area-->
 </body>
 <style>
+    .hiddenFragment{
+        display: none;
+    }
     #addToFavoritesButton{
         margin-left: 200px;
     }

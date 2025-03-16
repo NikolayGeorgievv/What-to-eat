@@ -23,30 +23,6 @@
 
 <div th:replace="~{fragments/generatedRecipe}"></div>
 
-<script>
-    document.getElementById('productSearchBtn').addEventListener('click', function () {
-        document.getElementById('productSearch').classList.remove('d-none');
-        document.getElementById('recipeSearch').classList.add('d-none');
-        document.getElementById('searchType').value = 'product';
-    });
-
-    document.getElementById('recipeSearchBtn').addEventListener('click', function () {
-        document.getElementById('recipeSearch').classList.remove('d-none');
-        document.getElementById('productSearch').classList.add('d-none');
-        document.getElementById('searchType').value = 'recipe';
-    });
-    document.getElementById('productSearchBtn').addEventListener('click', function () {
-        this.classList.add('btn-selected');
-        document.getElementById('recipeSearchBtn').classList.remove('btn-selected');
-    });
-
-    document.getElementById('recipeSearchBtn').addEventListener('click', function () {
-        this.classList.add('btn-selected');
-        document.getElementById('productSearchBtn').classList.remove('btn-selected');
-    });
-
-
-</script>
 </body>
 
 <style>
