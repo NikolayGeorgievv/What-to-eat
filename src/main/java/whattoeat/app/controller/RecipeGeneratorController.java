@@ -19,6 +19,7 @@ import java.util.List;
 public class RecipeGeneratorController {
 
     private final RecipeService recipeService;
+    private short generatedRecipeCounter;
 
     public RecipeGeneratorController(RecipeService recipeService) {
         this.recipeService = recipeService;
@@ -28,7 +29,7 @@ public class RecipeGeneratorController {
     public String generateRecipe(@RequestParam String searchType, @RequestParam(required = false) String ingredients,
                                  @RequestParam(required = false) String recipeName, Model model,
                                  HttpSession session) throws Exception {
-
+        generatedRecipeCounter = 0;
         List<String> previousRecipes = new ArrayList<>();
 
         String generatedRecipe = recipeService.generateRecipe(searchType, ingredients, recipeName);
@@ -43,7 +44,7 @@ public class RecipeGeneratorController {
                 ? Arrays.asList(ingredients.split(", "))  // Splitting by comma & optional spaces
                 : new ArrayList<>();
         session.setAttribute("ingredients", ingredientsList);
-
+        session.setAttribute("requestCount", generatedRecipeCounter);
 
         model.addAttribute("recipe", htmlRecipe);
         model.addAttribute("ingredients", ingredients);
@@ -65,10 +66,11 @@ public class RecipeGeneratorController {
 
     @PostMapping("/generateAnotherRecipe")
     public String generateAnotherRecipe(HttpSession session, Model model) throws IOException, InterruptedException {
-
+        generatedRecipeCounter++;
         // Retrieve stored ingredients & previous recipes
         List<String> ingredients = (List<String>) session.getAttribute("ingredients");
         List<String> previousRecipes = (List<String>) session.getAttribute("previousRecipes");
+        session.setAttribute("requestCount", generatedRecipeCounter);
 
         if (ingredients == null) {
             return "redirect:/resultPage"; // Fallback if session expired
@@ -88,6 +90,8 @@ public class RecipeGeneratorController {
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("recipeTitle", recipeTitle);
         model.addAttribute("recipeGenerated", true);
+        model.addAttribute("generateAnotherRecipeBtnTextAndCounter", generateAnotherRecipeBtnTextAndCounter());
+        model.addAttribute("requestCount", generatedRecipeCounter);
 
         if (recipeService.isValidRecipe(parsedGeneratedRecipe)) {
             model.addAttribute("validRecipeGenerated", true);
@@ -99,5 +103,10 @@ public class RecipeGeneratorController {
     @ModelAttribute("recipeNameNotEmpty")
     public boolean recipeNameNotEmpty() {
         return false;
+    }
+
+    @ModelAttribute("generateAnotherRecipeBtnTextAndCounter")
+    public String generateAnotherRecipeBtnTextAndCounter() {
+        return "Generate another recipe " + generatedRecipeCounter + "/5";
     }
 }

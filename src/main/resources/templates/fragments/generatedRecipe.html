@@ -19,20 +19,46 @@
                 </button>
             </form>
         </div>
-        <div th:classappend="${!recipeNameNotEmpty} ? '' : 'hiddenFragment'">
+        <div th:classappend="${!recipeNameNotEmpty} ? '' : 'hiddenFragment'" id="buttonContainer">
             <form id="generateAnotherRecipeForm" method="post" action="/generateAnotherRecipe"
                   th:classappend="${validRecipeGenerated} ? '' : 'hiddenFragment'">
                 <button id="generateAnotherRecipeBtn" type="submit"
-                        class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
+                        class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover"
+                        th:text="${generateAnotherRecipeBtnTextAndCounter}"
+                        th:attr="disabled=${requestCount >= 5 ? 'disabled' : null}"
+                        th:data-request-count="${requestCount}">
                     Generate another recipe
                 </button>
             </form>
+        </div>
+        <div id="limitMessage" class="hiddenFragment">
+            You have reached the maximum number of requests.
         </div>
     </div>
     <div id="recipeTextArea" th:utext="${recipe}"></div>
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let button = document.getElementById("generateAnotherRecipeBtn");
+        let message = document.getElementById("limitMessage");
+        let buttonContainer = document.getElementById("buttonContainer");
+
+        buttonContainer.addEventListener("mouseover", function () {
+
+            if (button.disabled) {
+                // Show the message with animation
+                message.classList.remove('hiddenFragment');
+
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    message.classList.add("hiddenFragment");
+                }, 3000);
+            }
+        });
+    });
+
+
     document.getElementById('searchBtn').addEventListener('click', function () {
         document.getElementById('generatedRecipeFragment').classList.remove('hiddenFragment');
     });
@@ -104,5 +130,23 @@
         margin-bottom: 10px;
         margin-left: 25px;
     }
+
+/*    =======*/
+
+    .limit-message {
+        position: absolute;
+        top: 120%; /* Slightly below the button */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 0, 0, 0.85);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 14px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease-in-out, visibility 0.5s;
+    }
+
 </style>
 </html>
