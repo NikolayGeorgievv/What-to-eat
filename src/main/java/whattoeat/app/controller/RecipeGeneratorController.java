@@ -29,10 +29,7 @@ public class RecipeGeneratorController {
                                  @RequestParam(required = false) String recipeName, Model model,
                                  HttpSession session) throws Exception {
 
-        List<String> previousRecipes = (List<String>) session.getAttribute("previousRecipes");
-        if (previousRecipes == null) {
-            previousRecipes = new ArrayList<>();
-        }
+        List<String> previousRecipes = new ArrayList<>();
 
         String generatedRecipe = recipeService.generateRecipe(searchType, ingredients, recipeName);
         String recipeTitle = recipeService.extractTitleFromGeneratedRecipe(generatedRecipe);
