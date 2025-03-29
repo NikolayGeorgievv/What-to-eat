@@ -5,17 +5,23 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import static whattoeat.app.constants.Constants.INVALID_EMAIL;
+import static whattoeat.app.constants.Constants.INVALID_PASSWORD;
+
 public class RegisterUserDTO {
 
     @Email
     @Size(max = 40)
+    @Pattern(
+            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$",
+            message = INVALID_EMAIL)
     private String email;
 
 
     @NotEmpty(message = "Please enter a password.")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$#!%^*?&])[A-Za-z\\d@$#!%^*?&]{8,40}$",
-            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character and be between 8 and 40 characters long.")
+            message = INVALID_PASSWORD)
     private String password;
     @NotEmpty
     private String confirmPassword;
