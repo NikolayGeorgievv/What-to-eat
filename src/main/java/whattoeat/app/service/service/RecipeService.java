@@ -28,4 +28,6 @@ public interface RecipeService {
     RecipeDTO findRecipeDTOById(Long id);
 
     void removeFavoriteRecipe(Long recipeId, String userEmail);
+
+    boolean isValidRecipe(String parsedGeneratedRecipe);
 }

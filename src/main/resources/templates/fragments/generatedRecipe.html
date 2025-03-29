@@ -7,7 +7,7 @@
 <body>
 
 <div id="generatedRecipeFragment" th:classappend="${recipeGenerated} ? '' : 'hiddenFragment'">
-    <form method="post" action="/addToFavorite">
+    <form method="post" action="/addToFavorite" th:classappend="${validRecipeGenerated} ? '' : 'hiddenFragment'">
         <input type="hidden" name="recipeTitle" th:value="${recipeTitle}">
         <input type="hidden" name="fullRecipe" th:value="${recipe}">
         <button id="addToFavoritesButton" type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">

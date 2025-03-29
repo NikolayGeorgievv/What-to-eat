@@ -20,6 +20,7 @@ public class RecipeGeneratorController {
     @PostMapping("/generate-recipe")
     public String generateRecipe(@RequestParam String searchType, @RequestParam(required = false) String ingredients,
                                  @RequestParam(required = false) String recipeName, Model model) throws Exception {
+
         String generatedRecipe = recipeService.generateRecipe(searchType, ingredients, recipeName);
         String recipeTitle = recipeService.extractTitleFromGeneratedRecipe(generatedRecipe);
         String parsedGeneratedRecipe = generatedRecipe.replace(" ...", "");
@@ -29,6 +30,10 @@ public class RecipeGeneratorController {
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("recipeTitle", recipeTitle);
         model.addAttribute("recipeGenerated", true);
+
+        if (recipeService.isValidRecipe(parsedGeneratedRecipe)) {
+            model.addAttribute("validRecipeGenerated", true);
+        }
         return "resultPage";
 
     }

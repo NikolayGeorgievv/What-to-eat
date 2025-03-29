@@ -121,6 +121,11 @@ public class RecipeServiceImpl implements RecipeService {
         userService.saveAndFlush(user);
     }
 
+    @Override
+    public boolean isValidRecipe(String parsedGeneratedRecipe) {
+        return !parsedGeneratedRecipe.equals("Please enter valid food ingredients or recipe!");
+    }
+
 
     public List<String> parseIngredients(String input) {
         String[] ingredientsArray = input.split("[,\\s]+");
