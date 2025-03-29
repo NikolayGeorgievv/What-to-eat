@@ -123,6 +123,7 @@ public class RecipeServiceImpl implements RecipeService {
         User user = userService.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
         List<FavoriteRecipe> favoriteRecipes = user.getFavoriteRecipes();
         favoriteRecipes.stream().filter(r -> r.getId().equals(recipeId)).findFirst().ifPresent(favoriteRecipes::remove);
+        recipeRepository.deleteById(recipeId);
         userService.saveAndFlush(user);
     }
 
