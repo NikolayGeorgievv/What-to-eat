@@ -135,7 +135,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public String generateAnotherRecipe(List<String> ingredients, List<String> previousRecipes) throws IOException, InterruptedException {
-        return recipeGenerator.generateAnotherRecipeWithGivenIngredients(ingredients,previousRecipes);
+        return recipeGenerator.generateAnotherRecipeWithGivenIngredientsOrRecipeName(ingredients,previousRecipes);
     }
 
 

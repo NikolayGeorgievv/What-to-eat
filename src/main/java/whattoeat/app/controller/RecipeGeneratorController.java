@@ -4,6 +4,7 @@ package whattoeat.app.controller;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import whattoeat.app.service.service.RecipeService;
@@ -52,6 +53,12 @@ public class RecipeGeneratorController {
         model.addAttribute("recipeTitle", recipeTitle);
         model.addAttribute("recipeGenerated", true);
 
+        if (!recipeName.isEmpty()){
+            model.addAttribute("recipeNameNotEmpty", true);
+        }else {
+            model.addAttribute("recipeNameNotEmpty", false);
+        }
+
         if (recipeService.isValidRecipe(parsedGeneratedRecipe)) {
             model.addAttribute("validRecipeGenerated", true);
         }
@@ -92,4 +99,8 @@ public class RecipeGeneratorController {
         return "resultPage";
     }
 
+    @ModelAttribute("recipeNameNotEmpty")
+    public boolean recipeNameNotEmpty() {
+        return false;
+    }
 }

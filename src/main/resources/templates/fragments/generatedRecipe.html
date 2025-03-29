@@ -7,18 +7,28 @@
 <body>
 
 <div id="generatedRecipeFragment" th:classappend="${recipeGenerated} ? '' : 'hiddenFragment'">
-    <form method="post" action="/addToFavorite" th:classappend="${validRecipeGenerated} ? '' : 'hiddenFragment'">
-        <input type="hidden" name="recipeTitle" th:value="${recipeTitle}">
-        <input type="hidden" name="fullRecipe" th:value="${recipe}">
-        <button id="addToFavoritesButton" type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
-            Add to favorites
-        </button>
-    </form>
-    <form id="generateAnotherRecipeForm" method="post" action="/generateAnotherRecipe" th:classappend="${validRecipeGenerated} ? '' : 'hiddenFragment'">
-        <button id="generateAnotherRecipeBtn" type="submit" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
-            Generate another recipe
-        </button>
-    </form>
+    <div id="buttonsHolderDiv" class="d-flex justify-content-start">
+        <div>
+            <form method="post" action="/addToFavorite"
+                  th:classappend="${validRecipeGenerated} ? '' : 'hiddenFragment'">
+                <input type="hidden" name="recipeTitle" th:value="${recipeTitle}">
+                <input type="hidden" name="fullRecipe" th:value="${recipe}">
+                <button id="addToFavoritesButton" type="submit"
+                        class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
+                    Add to favorites
+                </button>
+            </form>
+        </div>
+        <div th:classappend="${!recipeNameNotEmpty} ? '' : 'hiddenFragment'">
+            <form id="generateAnotherRecipeForm" method="post" action="/generateAnotherRecipe"
+                  th:classappend="${validRecipeGenerated} ? '' : 'hiddenFragment'">
+                <button id="generateAnotherRecipeBtn" type="submit"
+                        class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold me-2 btnHover">
+                    Generate another recipe
+                </button>
+            </form>
+        </div>
+    </div>
     <div id="recipeTextArea" th:utext="${recipe}"></div>
 </div>
 
@@ -57,10 +67,11 @@
 <!--TODO: Style the text area-->
 </body>
 <style>
-    .hiddenFragment{
+    .hiddenFragment {
         display: none;
     }
-    #addToFavoritesButton{
+
+    #addToFavoritesButton {
         margin-left: 200px;
     }
 

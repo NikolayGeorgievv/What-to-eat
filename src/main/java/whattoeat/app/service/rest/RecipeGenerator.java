@@ -47,42 +47,7 @@ public class RecipeGenerator {
         return jsonResponse.get("choices").get(0).get("message").get("content").asText();
     }
 
-    private String getSearchByProductsRequestBody(String ingredients) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(Map.of(
-                "model", "gpt-4o-mini",
-                "messages", List.of(
-                        Map.of("role", "system", "content", PROMPT_FOR_INGREDIENTS_INPUT
-                                ),
-                        Map.of("role", "user", "content", ingredients)),
-                "max_tokens", 800
-        ));
-    }
-
-    private String getSearchByRecipeNameRequestBody(String recipeName) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(Map.of(
-                "model", "gpt-4o-mini",
-                "messages", List.of(
-                        Map.of("role", "system", "content", PROMPT_FOR_RECIPE_NAME_INPUT),
-                        Map.of("role", "user", "content", recipeName)),
-                "max_tokens", 800
-        ));
-    }
-
-    private String getGenerateAnotherRecipeRequestBody(List<String> ingredients, List<String> previousRecipes) throws JsonProcessingException {
-        String ingredientsText = "Ingredients: " + String.join(", ", ingredients);
-        String previousRecipesText = "Previously generated recipes: " + (previousRecipes.isEmpty() ? "None" : String.join(", ", previousRecipes));
-
-        return new ObjectMapper().writeValueAsString(Map.of(
-                "model", "gpt-4o-mini",
-                "messages", List.of(
-                        Map.of("role", "system", "content", PROMPT_FOR_GENERATE_ANOTHER_RECIPE),
-                        Map.of("role", "user", "content", ingredientsText),
-                        Map.of("role", "user", "content", previousRecipesText)),
-                "max_tokens", 800
-        ));
-    }
-
-    public String generateAnotherRecipeWithGivenIngredients(List<String> ingredients, List<String> previousRecipes) throws IOException, InterruptedException {
+    public String generateAnotherRecipeWithGivenIngredientsOrRecipeName(List<String> ingredients, List<String> previousRecipes) throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
 
@@ -100,6 +65,42 @@ public class RecipeGenerator {
         // Parse response
         JsonNode jsonResponse = new ObjectMapper().readTree(response.body());
         return jsonResponse.get("choices").get(0).get("message").get("content").asText();
+    }
+
+    private String getSearchByProductsRequestBody(String ingredients) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(Map.of(
+                "model", "gpt-4o-mini",
+                "messages", List.of(
+                        Map.of("role", "system", "content", PROMPT_FOR_INGREDIENTS_INPUT
+                        ),
+                        Map.of("role", "user", "content", ingredients)),
+                "max_tokens", 800
+        ));
+    }
+
+    private String getSearchByRecipeNameRequestBody(String recipeName) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(Map.of(
+                "model", "gpt-4o-mini",
+                "messages", List.of(
+                        Map.of("role", "system", "content", PROMPT_FOR_RECIPE_NAME_INPUT),
+                        Map.of("role", "user", "content", recipeName)),
+                "max_tokens", 800
+        ));
+    }
+
+    private String getGenerateAnotherRecipeRequestBody(List<String> ingredients, List<String> previousRecipes) throws JsonProcessingException {
+        String previousRecipesText = "Previously generated recipes: " + (previousRecipes.isEmpty() ? "None" : String.join(", ", previousRecipes));
+        String ingredientsText = "Ingredients: " + String.join(", ", ingredients);
+
+        return new ObjectMapper().writeValueAsString(Map.of(
+                "model", "gpt-4o-mini",
+                "messages", List.of(
+                        Map.of("role", "system", "content", PROMPT_FOR_GENERATE_ANOTHER_RECIPE),
+                        Map.of("role", "user", "content", ingredientsText),
+                        Map.of("role", "user", "content", previousRecipesText)),
+                "max_tokens", 800
+        ));
+
     }
 
 }
