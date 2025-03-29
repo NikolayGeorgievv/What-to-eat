@@ -31,13 +31,6 @@ public class RecipeHandlerController {
         return "resultPage";
     }
 
-//    @GetMapping("/getSingleRecipe")
-//    public String getRecipe(@RequestParam("title") Long id, Model model) {
-//        RecipeDTO recipe = recipeService.findRecipeDTOById(id);
-//        model.addAttribute("recipe", recipe);
-//        return "singleRecipeResult";
-//    }
-
     @GetMapping("/getSingleRecipe")
     @ResponseBody
     public ResponseEntity<Map<String, String>> getFavoriteRecipe(@RequestParam Long recipeId) {

@@ -25,25 +25,24 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div th:each="recipe : ${favoriteRecipes}" class="col">
                     <div class="card shadow-sm">
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <p th:text="${recipe.split('---')[0]}" class="card-text">Recipe Name</p>
                             <p th:text="${recipe.split('---')[1]}" class="card-text" style="display: none">Recipe ID</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
+
+                            <div class="btn-group d-flex justify-content-between w-100">
+                                <button type="submit"
+                                        class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover view-recipe-btn"
+                                        th:data-recipe-id="${recipe.split('---')[1]}"
+                                        data-bs-toggle="modal" data-bs-target="#recipeModal">
+                                    See Recipe
+                                </button>
+                                <form action="/removeFavoriteRecipe" method="POST">
+                                    <input type="hidden" name="recipeId" th:value="${recipe.split('---')[1]}">
                                     <button type="submit"
-                                            class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover view-recipe-btn"
-                                            th:data-recipe-id="${recipe.split('---')[1]}"
-                                            data-bs-toggle="modal" data-bs-target="#recipeModal">
-                                        See Recipe
+                                            class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover">
+                                        Remove from favorite
                                     </button>
-                                    <form action="/removeFavoriteRecipe" method="POST">
-                                        <input type="hidden" name="recipeId" th:value="${recipe.split('---')[1]}">
-                                        <button type="submit"
-                                                class="btn btn-outline-warning btn-sm px-4 me-sm-3 fw-bold btnHover">
-                                            Remove from favorite
-                                        </button>
-                                    </form>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -52,10 +51,10 @@
         </div>
     </div>
     <div class="modal fade modal" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-xl" id="recipeModal1">
             <div class="modal-content" id="recipeModalContent">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="recipeTitle" th:text="${recipeTitle}"></h5>
+                    <h3 class="modal-title" id="recipeTitle" th:text="${recipeTitle}"></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -75,8 +74,6 @@
             button.addEventListener("click", function () {
                 let recipeId = this.getAttribute("data-recipe-id");
 
-                console.log("Recipe ID:", recipeId);
-
                 fetch(`/getSingleRecipe?recipeId=` + recipeId)
                     .then(response => response.json())
                     .then(data => {
@@ -90,22 +87,23 @@
 </script>
 </body>
 <style>
-    .modal {
-        max-height: 100vh;
+    .modal-header{
+        text-align: center;
+        position: relative;
+    }
+
+    .modal-title {
+        flex: 1;
+        text-align: center;
+    }
+
+    #recipeModalContent {
         overflow: hidden!important;
     }
 
-    .modal-open {
-        overflow: hidden!important;
-    }
-
-    #favoriteRecipesAlbumHeader, #customRecipesAlbumHeader {
+    #favoriteRecipesAlbumHeader {
         text-align: center;
         margin-bottom: 20px;
-    }
-    #defaultHeading{
-        text-align: center;
-        margin-top: 200px;
     }
 </style>
 </html>

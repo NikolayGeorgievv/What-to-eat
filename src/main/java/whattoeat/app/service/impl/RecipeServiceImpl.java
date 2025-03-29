@@ -47,7 +47,8 @@ public class RecipeServiceImpl implements RecipeService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Recipe recipe = new Recipe();
-            recipe.setName(recipeTitle);
+            recipe.setName(recipeTitle.trim());
+            System.out.println(recipeTitle);
             recipe.setPreparationDescription(fullRecipe);
             recipeRepository.saveAndFlush(recipe);
 
@@ -110,7 +111,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeDTO findRecipeDTOById(Long id) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Recipe not found"));
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getPreparationDescription());
+
+//        Split the content and the header and return the content only
+        return new RecipeDTO(recipe.getId(),
+                recipe.getName(),
+                recipe.getPreparationDescription().split("</h2>")[1]);
     }
 
     @Override
