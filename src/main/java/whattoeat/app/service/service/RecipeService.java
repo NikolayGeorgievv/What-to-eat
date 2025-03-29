@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import whattoeat.app.dto.RecipeDTO;
 import whattoeat.app.model.Recipe;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,4 +32,6 @@ public interface RecipeService {
     void removeFavoriteRecipe(Long recipeId, String userEmail);
 
     boolean isValidRecipe(String parsedGeneratedRecipe);
+
+    String generateAnotherRecipe(List<String> ingredients, List<String> previousRecipes) throws IOException, InterruptedException;
 }

@@ -11,6 +11,7 @@ import whattoeat.app.service.service.FavoriteRecipeService;
 import whattoeat.app.service.service.RecipeService;
 import whattoeat.app.service.service.UserService;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -130,6 +131,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public boolean isValidRecipe(String parsedGeneratedRecipe) {
         return !parsedGeneratedRecipe.equals("Please enter valid food ingredients or recipe!");
+    }
+
+    @Override
+    public String generateAnotherRecipe(List<String> ingredients, List<String> previousRecipes) throws IOException, InterruptedException {
+        return recipeGenerator.generateAnotherRecipeWithGivenIngredients(ingredients,previousRecipes);
     }
 
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,8 +14,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
-import static whattoeat.app.constants.Prompts.PROMPT_FOR_INGREDIENTS_INPUT;
-import static whattoeat.app.constants.Prompts.PROMPT_FOR_RECIPE_NAME_INPUT;
+import static whattoeat.app.constants.Prompts.*;
 
 @Service
 public class RecipeGenerator {
@@ -67,4 +67,39 @@ public class RecipeGenerator {
                 "max_tokens", 800
         ));
     }
+
+    private String getGenerateAnotherRecipeRequestBody(List<String> ingredients, List<String> previousRecipes) throws JsonProcessingException {
+        String ingredientsText = "Ingredients: " + String.join(", ", ingredients);
+        String previousRecipesText = "Previously generated recipes: " + (previousRecipes.isEmpty() ? "None" : String.join(", ", previousRecipes));
+
+        return new ObjectMapper().writeValueAsString(Map.of(
+                "model", "gpt-4o-mini",
+                "messages", List.of(
+                        Map.of("role", "system", "content", PROMPT_FOR_GENERATE_ANOTHER_RECIPE),
+                        Map.of("role", "user", "content", ingredientsText),
+                        Map.of("role", "user", "content", previousRecipesText)),
+                "max_tokens", 800
+        ));
+    }
+
+    public String generateAnotherRecipeWithGivenIngredients(List<String> ingredients, List<String> previousRecipes) throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        requestBody = getGenerateAnotherRecipeRequestBody(ingredients, previousRecipes);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Authorization", "Bearer " + API_KEY)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Parse response
+        JsonNode jsonResponse = new ObjectMapper().readTree(response.body());
+        return jsonResponse.get("choices").get(0).get("message").get("content").asText();
+    }
+
 }
