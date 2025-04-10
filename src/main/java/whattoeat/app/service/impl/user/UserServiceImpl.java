@@ -14,6 +14,7 @@ import whattoeat.app.model.UserRoleEntity;
 import whattoeat.app.repository.NotificationRepository;
 import whattoeat.app.repository.RolesRepository;
 import whattoeat.app.repository.UserRepository;
+import whattoeat.app.service.email.MailService;
 import whattoeat.app.service.service.UserService;
 
 import java.util.ArrayList;
@@ -28,13 +29,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
     private final NotificationRepository notificationRepository;
+    private final MailService mailService;
 
-    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, NotificationRepository notificationRepository) {
+    public UserServiceImpl(UserDetailImpl userDetail, PasswordEncoder passwordEncoder, UserRepository userRepository, RolesRepository rolesRepository, NotificationRepository notificationRepository, MailService mailService) {
         this.userDetail = userDetail;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
         this.notificationRepository = notificationRepository;
+        this.mailService = mailService;
     }
 
 
@@ -70,8 +73,8 @@ public class UserServiceImpl implements UserService {
             UserRoleEntity userRole = rolesRepository.getReferenceById(1L);
             user.setRoles(List.of(userRole));
         }
-
         userRepository.saveAndFlush(user);
+        mailService.sendRegisterActivationEmail(user);
     }
 
 //    @Override

@@ -12,6 +12,8 @@ public class User extends BaseEntity {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column
+    private boolean enabled = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -76,5 +78,13 @@ public class User extends BaseEntity {
 
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

@@ -34,7 +34,7 @@ public class SecurityConfig {
                                 .requestMatchers(String.valueOf(PathRequest.toStaticResources().atCommonLocations())).permitAll()
                                 .requestMatchers("/images/**", "/js/**", "/css/**", "/favicon/**").permitAll()
 //                                // Allow anyone to see the home page, the registration page and the login form.
-                                .requestMatchers("/mainPage", "/users/login", "/users/register", "/", "/users/login-error").permitAll()
+                                .requestMatchers("/mainPage", "/users/login", "/users/register", "/", "/users/login-error", "/activate").permitAll()
                                 .requestMatchers("/error", "/fragments/**", "/users/termsAndConditions").permitAll()
                                 .requestMatchers("resultPage", "results", "search", "recipe", "searchPage").permitAll()
                                 .requestMatchers("/adminPage").hasRole(UserRoleEnum.ADMIN.name())
